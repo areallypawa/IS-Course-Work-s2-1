@@ -1,15 +1,20 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(TreeProject)
+project(App)
 
 set(CMAKE_CXX_STANDARD 17)
 
-include_directories(include)
-
-add_executable(TreeProject
-    src/main.cpp
-    src/menu.cpp
-    src/bst.cpp
-    src/avl.cpp
-    src/red_black.cpp
+add_executable(App
+    trees/src/main.cpp
+    trees/src/binary_tree.cpp
+    trees/src/bst.cpp
+    trees/src/avl.cpp
+    trees/src/red_black.cpp
+    trees/src/menu.cpp
 )
+
+target_include_directories(App PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/trees/include
+)
+
+
