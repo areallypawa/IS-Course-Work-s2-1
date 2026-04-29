@@ -2,10 +2,6 @@
 #include <string>
 #include "binary_tree.h"
 
-#include <windows.h>
-#include <thread>
-#include <chrono>
-#include "menu.h"
 
 BinaryTree::Node::Node(int value) : value(value), left(nullptr), right(nullptr) {
 }
@@ -56,85 +52,25 @@ void BinaryTree::print() {
     print(root);
 }
 
-void wait(int ms) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(ms));
-}
-
-void BinaryTree::draw(BinaryTree::Node* node) {
+void BinaryTree::printPretty(Node* node, int depth, bool isLeft) {
     if (!node) return;
+    printPretty(node->right, depth + 1, false);
+    for (int i = 0; i < depth; i++)
+        std::cout << "    ";
 
-    set_cords(node->pos.x, node->pos.y);
-    std::cout << node->value;
-
-    if (node->left) {
-        set_cords((node->pos.x + node->left->pos.x) / 2,
-            (node->pos.y + node->left->pos.y) / 2);
-        std::cout << "/";
+    if (depth == 0) {
+        std::cout << "--> ";
     }
-
-    if (node->right) {
-        set_cords((node->pos.x + node->right->pos.x) / 2,
-            (node->pos.y + node->right->pos.y) / 2);
-        std::cout << "\\";
+    else if (isLeft) {
+        std::cout << "`--> ";
     }
-
-    draw(node->left);
-    draw(node->right);
+    else {
+        std::cout << ".--> ";
+    }
+    std::cout << node->value << std::endl;
+    printPretty(node->left, depth + 1, true);
 }
 
-void BinaryTree::layout(BinaryTree::Node* node, int x, int y, int offset) {
-    if (!node) return;
-
-    node->pos = { x, y };
-
-    layout(node->left, x - offset, y + 4, offset / 2);
-    layout(node->right, x + offset, y + 4, offset / 2);
-}
-
-
-void BinaryTree::animateBuild() {
-    system("cls");
-    hideCursor();
-
-    // шаг 1 Ч корень
-    setRoot(10);
-    layout(root, 40, 1, 20);
-    system("cls");
-    draw(root);
-    wait(400);
-
-    // шаг 2
-    addLeft(root, 5);
-    layout(root, 40, 1, 20);
-    system("cls");
-    draw(root);
-    wait(400);
-
-    // шаг 3
-    addRight(root, 20);
-    layout(root, 40, 1, 20);
-    system("cls");
-    draw(root);
-    wait(400);
-
-    // шаг 4
-    addLeft(root->left, 3);
-    layout(root, 40, 1, 20);
-    system("cls");
-    draw(root);
-    wait(400);
-
-    // шаг 5
-    addRight(root->left, 7);
-    layout(root, 40, 1, 20);
-    system("cls");
-    draw(root);
-    wait(400);
-
-    // шаг 6
-    addRight(root->right, 30);
-    layout(root, 40, 1, 20);
-    system("cls");
-    draw(root);
-    wait(400);
+void BinaryTree::printPretty() {
+    printPretty(root, 0, false);
 }

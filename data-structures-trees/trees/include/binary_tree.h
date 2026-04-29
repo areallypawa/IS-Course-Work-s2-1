@@ -22,8 +22,7 @@ private:
 	void print(Node* node);
 	void deleteTree(Node* node);
 	void printPretty(Node* node, int depth, bool isLeft);
-	void draw(Node* node);
-	void layout(Node* node, int x, int y, int offset);
+
 public:
 	BinaryTree();
 	~BinaryTree();
@@ -35,6 +34,6 @@ public:
 	void addRight(Node* parent, int value);
 
 	void print();      
+	void printPretty();
 
-	void animateBuild();
 	};
