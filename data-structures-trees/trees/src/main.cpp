@@ -8,7 +8,7 @@
 
 int main()
 {
-    setlocale(LC_ALL, "Russian");
+   
 
     /*
 		Сдесь нет реализации меню, так как это просто пример работы с бинарным деревом.
@@ -27,6 +27,8 @@ int main()
 
     */
 
+    SetConsoleOutputCP(65001);
+    SetConsoleCP(65001);
 	BinaryTree tree;
 
     tree.setRoot(10);
