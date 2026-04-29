@@ -27,28 +27,10 @@ int main()
 
     */
 
-    SetConsoleOutputCP(65001);
-    SetConsoleCP(65001);
-	BinaryTree tree;
+    setlocale(0, "ru");
 
-    tree.setRoot(10);
-    auto root = tree.getRoot();
-
-    tree.addLeft(root, 5);
-    tree.addRight(root, 20);
-
-    tree.addLeft(root->left, 3);
-    tree.addRight(root->left, 7);
-
-    tree.addRight(root->right, 30);
-
-    tree.addLeft(root->left->right, 6);
-    std::cout << "Обычный вывод:\n";
-    tree.print();
-
-    std::cout << "\n\nКрасивый вывод:\n";
-    tree.printPretty();
-
+    BinaryTree tree(1);
+    
 	return 0;
 
 }

@@ -18,8 +18,9 @@ private:
 	void deleteTree(Node* node);
 	void printPretty(Node* node, int depth, bool isLeft);
 
+
 public:
-	BinaryTree();
+	BinaryTree(bool demo);
 	~BinaryTree();
 
 	void setRoot(int value);
@@ -30,5 +31,6 @@ public:
 
 	void print();      
 	void printPretty();
-
+	void buildDemoTree();
+	void printDemo();
 	};

@@ -6,8 +6,13 @@
 BinaryTree::Node::Node(int value) : value(value), left(nullptr), right(nullptr) {
 }
 
-BinaryTree::BinaryTree() {
+BinaryTree::BinaryTree(bool demo) {
     root = nullptr;
+
+    if (demo) {
+        buildDemoTree();
+        printDemo();
+    }
 }
 
 void BinaryTree::deleteTree(Node* node) {
@@ -73,4 +78,27 @@ void BinaryTree::printPretty(Node* node, int depth, bool isLeft) {
 
 void BinaryTree::printPretty() {
     printPretty(root, 0, false);
+}
+
+void BinaryTree::buildDemoTree() {
+    setRoot(10);
+    auto r = getRoot();
+
+    addLeft(r, 5);
+    addRight(r, 20);
+
+    addLeft(r->left, 3);
+    addRight(r->left, 7);
+
+    addRight(r->right, 30);
+
+    addLeft(r->left->right, 6);
+}
+
+void BinaryTree::printDemo() {
+    std::cout << "Обычный вывод:\n";
+    print();
+
+    std::cout << "\n\nКрасивый вывод:\n";
+    printPretty();
 }
