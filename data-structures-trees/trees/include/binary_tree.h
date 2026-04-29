@@ -3,17 +3,12 @@
 class BinaryTree
 {
 private:
-	struct Pos {
-		int x;
-		int y;
-	};
 
 	struct Node {
 		int value;
 		Node* left;
 		Node* right;
 
-		Pos pos;
 
 		Node(int value);
 	};
