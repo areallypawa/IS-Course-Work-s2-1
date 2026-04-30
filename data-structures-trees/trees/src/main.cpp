@@ -10,8 +10,8 @@ int main()
 {
   
 
-    setlocale(0, "ru")
-
+    setlocale(0, "ru");
+    
     BinaryTree tree(1);
     
 	return 0;
