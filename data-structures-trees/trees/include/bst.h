@@ -27,8 +27,12 @@ public:
 
 	void addLeft(Node* parent, int value);
 	void addRight(Node* parent, int value);
+	void insert(int value);
+	bool search(int value);
 
 	void print();
 	void printPretty();
 
 };
+
+void runBSTTask();
