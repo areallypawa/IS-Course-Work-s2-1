@@ -10,10 +10,13 @@ int main()
 {
   
 
-    setlocale(0, "ru")
-
-    BinaryTree tree(1);
+    setlocale(0, "ru");
     
+    //BinaryTree tree(1);
+    
+    runBSTTask();
+
+
 	return 0;
 
 }
