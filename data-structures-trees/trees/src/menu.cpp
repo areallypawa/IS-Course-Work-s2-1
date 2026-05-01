@@ -2,6 +2,24 @@
 #include "menu.h"
 using namespace std;
 
+int logCount = 0;
+FuncLog* logs = nullptr;
+
+void addLog(string category, string name, double duration) {
+    FuncLog* newLogs = new FuncLog[logCount + 1];
+
+    for (int i = 0; i < logCount; i++) {
+        newLogs[i] = logs[i];
+    }
+
+    newLogs[logCount].name = name;
+    newLogs[logCount].duration_ms = duration;
+    newLogs[logCount].category = category;
+    delete[] logs;
+    logs = newLogs;
+    logCount++;
+}
+
 void clear() {
 #ifdef _WIN32
     system("cls");
