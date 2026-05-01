@@ -2,6 +2,40 @@
 #include <string>
 #include "bst.h"
 
+/* 
+    SERVICE CODE 
+*/
+
+int currentItems = 0;
+int currentChoose = 0;
+
+
+std::string items[] =
+{
+    "Создать дерево",
+    "Вывести дерево",
+    "Сравнение скорости -> вставки / удаления / получения", 
+    "Обход дерева",
+    "Очистить логи",
+    "Выход"
+};
+
+int countItems = sizeof(items) / sizeof(std::string);
+
+std::string ChooseItems[] =
+{
+    "Создать дерево",
+    "Вывести дерево",
+    "Сравнение скорости -> вставки / удаления / получения",
+    "Обход дерева",
+    "Очистить логи",
+    "Выход"
+};
+
+
+/*
+    SERVICE CODE
+*/
 
 BST::Node::Node(int value) : value(value), left(nullptr), right(nullptr) {
 }
@@ -122,5 +156,37 @@ bool BST::search(int value) {
     c. N file элементов
 */
 
+void createTree() {
+    BST tree;
 
+    //do {
+
+
+    //} while (current != countItems - 1);
+
+
+
+    std::cout << "Введите числа:\n";
+    int x;
+    while (true) {
+        std::cin >> x;
+        if (x == 0) break;
+        tree.insert(x);
+    }
+
+    std::cout << "\nДерево:\n";
+    tree.printPretty();
+
+    std::cout << "\nПоиск чисел (0 — выход):\n";
+
+    while (true) {
+        std::cin >> x;
+        if (x == 0) break;
+
+        if (tree.search(x))
+            std::cout << "Найдено\n";
+        else
+            std::cout << "Не найдено\n";
+    }
+}
 

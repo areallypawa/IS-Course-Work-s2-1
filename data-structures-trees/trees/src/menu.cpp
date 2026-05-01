@@ -2,10 +2,27 @@
 #include "menu.h"
 using namespace std;
 
-int logCount = 0;
-FuncLog* logs = nullptr;
+Logis::FuncLog::FuncLog(std::string category, std::string name, double duration_ms) : category(category), name(name), duration_ms(duration_ms) {
+}
 
-void addLog(string category, string name, double duration) {
+Logis::CategoryStats::CategoryStats(char category[20], long long listTotalTime, long long arrayTotalTime, long long BSTTotalTime, long long AVLTotalTime, long long RBTotalTime, int listCount, int arrayCount, int BSTCount, int AVLCount, int RBCount)
+{
+    category = category;
+    listTotalTime = listTotalTime;
+    arrayTotalTime = arrayTotalTime;
+    listCount = listCount;
+    arrayCount = arrayCount;
+    BSTTotalTime = BSTTotalTime;
+    AVLTotalTime = AVLTotalTime;
+    RBTotalTime = RBTotalTime;
+    BSTCount = BSTCount;
+    AVLCount = AVLCount;
+    RBCount = RBCount;
+
+}
+void Logis::addLog(string category, string name, double duration) {
+    if (!logs) setLog();
+
     FuncLog* newLogs = new FuncLog[logCount + 1];
 
     for (int i = 0; i < logCount; i++) {
@@ -18,6 +35,11 @@ void addLog(string category, string name, double duration) {
     delete[] logs;
     logs = newLogs;
     logCount++;
+}
+
+void Logis::setLog() {
+    logs = nullptr;
+    logCount = 0;
 }
 
 void clear() {
