@@ -1,3 +1,5 @@
+#pragma once
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <windows.h>
 #include <chrono>
@@ -11,6 +13,7 @@ private:
         std::string name;
         double duration_ms;
 
+        FuncLog() = default;
         FuncLog(std::string category, std::string name, double duration_ms);
     };
 
@@ -27,7 +30,7 @@ private:
         int AVLCount;
         int RBCount;
 
-        CategoryStats(char category[20], long long listTotalTime, long long arrayTotalTime, long long BSTTotalTime, long long AVLTotalTime, long long RBTotalTime, int listCount, int arrayCount, int BSTCount, int AVLCount, int RBCount)
+        CategoryStats(const char* cat);
     };
 
     FuncLog* logs;
@@ -37,11 +40,11 @@ public:
 
     template<typename Func>
     auto measureTime(std::string category, std::string name, Func f) {
-        auto start = chrono::high_resolution_clock::now();
+        auto start = std::chrono::high_resolution_clock::now();
         auto result = f();
-        auto end = chrono::high_resolution_clock::now();
+        auto end = std::chrono::high_resolution_clock::now();
 
-        chrono::duration<double, micro> duration = end - start;
+        std::chrono::duration<double, std::micro> duration = end - start;
         addLog(category, name, duration.count());
 
         return result;

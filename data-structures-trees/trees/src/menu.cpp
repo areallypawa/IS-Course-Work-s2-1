@@ -2,45 +2,44 @@
 #include "menu.h"
 using namespace std;
 
-Logis::FuncLog::FuncLog(std::string category, std::string name, double duration_ms) : category(category), name(name), duration_ms(duration_ms) {
+Logis::FuncLog::FuncLog(std::string category, std::string name, double duration_ms)
+    : category(category), name(name), duration_ms(duration_ms) {
 }
 
-Logis::CategoryStats::CategoryStats(char category[20], long long listTotalTime, long long arrayTotalTime, long long BSTTotalTime, long long AVLTotalTime, long long RBTotalTime, int listCount, int arrayCount, int BSTCount, int AVLCount, int RBCount)
+Logis::CategoryStats::CategoryStats(const char* cat)
 {
-    category = category;
-    listTotalTime = listTotalTime;
-    arrayTotalTime = arrayTotalTime;
-    listCount = listCount;
-    arrayCount = arrayCount;
-    BSTTotalTime = BSTTotalTime;
-    AVLTotalTime = AVLTotalTime;
-    RBTotalTime = RBTotalTime;
-    BSTCount = BSTCount;
-    AVLCount = AVLCount;
-    RBCount = RBCount;
+    std::strncpy(category, cat, 19);
+    category[19] = '\0';
 
+    listTotalTime = 0;
+    arrayTotalTime = 0;
+    BSTTotalTime = 0;
+    AVLTotalTime = 0;
+    RBTotalTime = 0;
+
+    listCount = 0;
+    arrayCount = 0;
+    BSTCount = 0;
+    AVLCount = 0;
+    RBCount = 0;
 }
-void Logis::addLog(string category, string name, double duration) {
-    if (!logs) setLog();
 
+
+void Logis::addLog(std::string category, std::string name, double duration)
+{
     FuncLog* newLogs = new FuncLog[logCount + 1];
 
     for (int i = 0; i < logCount; i++) {
         newLogs[i] = logs[i];
     }
 
-    newLogs[logCount].name = name;
-    newLogs[logCount].duration_ms = duration;
-    newLogs[logCount].category = category;
+    newLogs[logCount] = FuncLog(category, name, duration);
+
     delete[] logs;
     logs = newLogs;
     logCount++;
 }
 
-void Logis::setLog() {
-    logs = nullptr;
-    logCount = 0;
-}
 
 void clear() {
 #ifdef _WIN32
