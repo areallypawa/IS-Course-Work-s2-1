@@ -5,6 +5,8 @@
 #include <chrono>
 #include <string>
 
+
+
 class Logis 
 {
 private:
@@ -62,3 +64,4 @@ void pause();
 
 void hideCursor();
 void set_cords(int x, int y);
+void show_menu(int current, int size_items, const std::string items[], const std::string str);

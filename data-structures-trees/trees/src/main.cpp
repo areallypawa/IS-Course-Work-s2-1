@@ -10,7 +10,7 @@ int main()
 {
     setlocale(0, "ru");
     
-
+    createTree();
    
 
 

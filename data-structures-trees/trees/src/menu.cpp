@@ -24,7 +24,6 @@ Logis::CategoryStats::CategoryStats(const char* cat)
     RBCount = 0;
 }
 
-
 void Logis::addLog(std::string category, std::string name, double duration)
 {
     FuncLog* newLogs = new FuncLog[logCount + 1];
@@ -73,3 +72,14 @@ void set_cords(int x, int y) {
     SetConsoleCursorPosition(hStdout, pos);
 }
 
+void show_menu(int current, int size_items, const string items[], const string str) {
+    hideCursor();
+    set_cords(0, 0);
+    cout << "=============== " << str << " ===============\n";
+    for (int i = 0; i < size_items; i++) {
+        if (i == current)
+            cout << " -> " << items[i] << "\n";
+        else
+            cout << "    " << items[i] << "\n";
+    }
+}

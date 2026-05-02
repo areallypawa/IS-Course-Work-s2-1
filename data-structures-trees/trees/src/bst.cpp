@@ -1,6 +1,5 @@
-#include <iostream>
-#include <string>
 #include "bst.h"
+#include "menu.h"
 
 /* 
     SERVICE CODE 
@@ -8,7 +7,6 @@
 
 int currentItems = 0;
 int currentChoose = 0;
-
 
 std::string items[] =
 {
@@ -20,16 +18,11 @@ std::string items[] =
     "Выход"
 };
 
-int countItems = sizeof(items) / sizeof(std::string);
-
 std::string ChooseItems[] =
 {
-    "Создать дерево",
-    "Вывести дерево",
-    "Сравнение скорости -> вставки / удаления / получения",
-    "Обход дерева",
-    "Очистить логи",
-    "Выход"
+    "Рандом",
+    "Ввести вручную",
+    "Считать с файла",
 };
 
 
@@ -159,10 +152,17 @@ bool BST::search(int value) {
 void createTree() {
     BST tree;
 
-    //do {
+    do {
+        while (true) {
+            show_menu(currentItems, countItems, items, "МЕНЮ");
+            int key = _getch();
 
+            if (key == 72 && currentItems > 0) currentItems--;
+            if (key == 80 && currentItems < countItems - 1) currentItems++;
+            if (key == 13) break;
+        }
 
-    //} while (current != countItems - 1);
+    } while (currentItems != countItems - 1);
 
 
 

@@ -1,11 +1,20 @@
 #pragma once
-#include "menu.h"
-
+#include <iostream>
+#include <iterator>
+#include <string>
+#include <conio.h>
 /*
 	SERVICE CODE
 */
 
+extern int currentItems;
+extern int currentChoose;
 
+extern std::string items[];
+extern std::string ChooseItems[];
+
+constexpr int countItems = 6;
+constexpr int coutChooseItems = 3;
 
 /*
 	SERVICE CODE
@@ -46,3 +55,4 @@ public:
 
 };
 
+void createTree();
