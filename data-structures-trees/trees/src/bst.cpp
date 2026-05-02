@@ -162,8 +162,27 @@ void createTree() {
             if (key == 13) break;
         }
 
-    } while (currentItems != countItems - 1);
+        switch (currentItems) {
+        case 0:
+            clear();
+            while (true) {
+                show_menu(currentChoose, coutChooseItems, ChooseItems, "Выбор функции");
+                int key = _getch();
 
+                if (key == 72 && currentChoose > 0) currentChoose--;
+                if (key == 80 && currentChoose < coutChooseItems - 1) currentChoose++;
+                if (key == 13) break;
+            }
+        }
+
+
+
+
+
+
+
+
+    } while (currentItems != countItems - 1);
 
 
     std::cout << "Введите числа:\n";

@@ -74,6 +74,7 @@ void set_cords(int x, int y) {
 
 void show_menu(int current, int size_items, const string items[], const string str) {
     hideCursor();
+    
     set_cords(0, 0);
     cout << "=============== " << str << " ===============\n";
     for (int i = 0; i < size_items; i++) {
