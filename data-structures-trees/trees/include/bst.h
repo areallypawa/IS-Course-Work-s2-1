@@ -3,6 +3,8 @@
 #include <iterator>
 #include <string>
 #include <conio.h>
+#include <random>
+#include "menu.h"
 /*
 	SERVICE CODE
 */
@@ -35,7 +37,6 @@ private:
 	Node* root;
 
 	void print(Node* node);
-	void deleteTree(Node* node);
 	void printPretty(Node* node, int depth, bool isLeft);
 
 public:
@@ -49,10 +50,12 @@ public:
 	void addRight(Node* parent, int value);
 	void insert(int value);
 	bool search(int value);
+	void deleteTree(Node* node);
 
 	void print();
 	void printPretty();
 
 };
 
-void createTree();
+void insertAuto(BST& tree, int N);
+void createTree(Logis& log);

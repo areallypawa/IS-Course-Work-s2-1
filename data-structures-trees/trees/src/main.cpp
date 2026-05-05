@@ -9,8 +9,8 @@
 int main()
 {
     setlocale(0, "ru");
-    
-    createTree();
+    Logis log;
+    createTree(log);
    
 
 

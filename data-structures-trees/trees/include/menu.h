@@ -4,58 +4,57 @@
 #include <windows.h>
 #include <chrono>
 #include <string>
+#include <vector>
+#include <map>
 
 
-
-class Logis 
-{
+class Logis {
 private:
     struct FuncLog {
         std::string category;
         std::string name;
-        double duration_ms;
+        double duration;
 
-        FuncLog() = default;
-        FuncLog(std::string category, std::string name, double duration_ms);
+        FuncLog(std::string c, std::string n, double d)
+            : category(c), name(n), duration(d) {
+        }
     };
 
-    struct CategoryStats {
-        char category[20];
-        long long listTotalTime;
-        long long arrayTotalTime;
-        long long BSTTotalTime;
-        long long AVLTotalTime;
-        long long RBTotalTime;
-        int listCount;
-        int arrayCount;
-        int BSTCount;
-        int AVLCount;
-        int RBCount;
-
-        CategoryStats(const char* cat);
-    };
-
-    FuncLog* logs;
-    int logCount;
+    std::vector<FuncLog> logs;
 
 public:
+    void addLog(std::string category, std::string name, double duration);
 
     template<typename Func>
     auto measureTime(std::string category, std::string name, Func f) {
         auto start = std::chrono::high_resolution_clock::now();
-        auto result = f();
-        auto end = std::chrono::high_resolution_clock::now();
 
-        std::chrono::duration<double, std::micro> duration = end - start;
-        addLog(category, name, duration.count());
-
-        return result;
+        if constexpr (std::is_void_v<decltype(f())>) {
+            f();
+            auto end = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration<double, std::micro>(end - start);
+            addLog(category, name, duration.count());
+        }
+        else {
+            auto result = f();
+            auto end = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration<double, std::micro>(end - start);
+            addLog(category, name, duration.count());
+            return result;
+        }
     }
 
-    void addLog(std::string category, std::string name, double duration);
-    void setLog();
+    const std::vector<FuncLog>& getLogs() const {
+        return logs;
+    }
 };
 
+struct CategoryStats {
+    double total;
+    int count;
+
+    CategoryStats() { total = 0; count = 0; };
+};
 
 void clear();
 void clearInput();

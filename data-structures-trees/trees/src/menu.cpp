@@ -1,44 +1,10 @@
-#include <iostream>
 #include "menu.h"
 using namespace std;
 
-Logis::FuncLog::FuncLog(std::string category, std::string name, double duration_ms)
-    : category(category), name(name), duration_ms(duration_ms) {
-}
-
-Logis::CategoryStats::CategoryStats(const char* cat)
-{
-    std::strncpy(category, cat, 19);
-    category[19] = '\0';
-
-    listTotalTime = 0;
-    arrayTotalTime = 0;
-    BSTTotalTime = 0;
-    AVLTotalTime = 0;
-    RBTotalTime = 0;
-
-    listCount = 0;
-    arrayCount = 0;
-    BSTCount = 0;
-    AVLCount = 0;
-    RBCount = 0;
-}
-
 void Logis::addLog(std::string category, std::string name, double duration)
 {
-    FuncLog* newLogs = new FuncLog[logCount + 1];
-
-    for (int i = 0; i < logCount; i++) {
-        newLogs[i] = logs[i];
-    }
-
-    newLogs[logCount] = FuncLog(category, name, duration);
-
-    delete[] logs;
-    logs = newLogs;
-    logCount++;
+    logs.emplace_back(category, name, duration);
 }
-
 
 void clear() {
 #ifdef _WIN32
@@ -82,5 +48,27 @@ void show_menu(int current, int size_items, const string items[], const string s
             cout << " -> " << items[i] << "\n";
         else
             cout << "    " << items[i] << "\n";
+    }
+}
+
+void showStats(const Logis& logis) {
+    auto& logs = logis.getLogs();
+
+    std::map<std::string, std::map<std::string, CategoryStats>> stats;
+
+    for (const auto& log : logs) {
+        stats[log.name][log.category].total += log.duration;
+        stats[log.name][log.category].count++;
+    }
+
+    for (const auto& [operation, categories] : stats) {
+        std::cout << "\nОперация: " << operation << "\n";
+
+        for (const auto& [category, stat] : categories) {
+            double avg = stat.total / stat.count;
+            std::cout << "  " << category
+                << " | avg: " << avg
+                << " | count: " << stat.count << "\n";
+        }
     }
 }

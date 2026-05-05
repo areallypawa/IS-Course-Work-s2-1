@@ -1,5 +1,9 @@
 #include "bst.h"
-#include "menu.h"
+
+#define MEASURE(cat, name, expr) \
+    do { log.measureTime(cat, name, [&]() { expr; }); } while(0)
+
+using namespace std;
 
 /* 
     SERVICE CODE 
@@ -8,7 +12,7 @@
 int currentItems = 0;
 int currentChoose = 0;
 
-std::string items[] =
+string items[] =
 {
     "Создать дерево",
     "Вывести дерево",
@@ -18,7 +22,7 @@ std::string items[] =
     "Выход"
 };
 
-std::string ChooseItems[] =
+string ChooseItems[] =
 {
     "Рандом",
     "Ввести вручную",
@@ -46,6 +50,8 @@ void BST::deleteTree(Node* node) {
 }
 
 BST::~BST() {
+    cout << "DESTRUCT BST\n";
+    pause();
     deleteTree(root);
 }
 
@@ -70,7 +76,7 @@ void BST::addRight(Node* parent, int value) {
 void BST::print(Node* node) {
     if (!node) return;
 
-    std::cout << node->value << " ";
+    cout << node->value << " ";
     print(node->left);
     print(node->right);
 }
@@ -83,18 +89,18 @@ void BST::printPretty(Node* node, int depth, bool isLeft) {
     if (!node) return;
     printPretty(node->right, depth + 1, false);
     for (int i = 0; i < depth; i++)
-        std::cout << "    ";
+        cout << "    ";
 
     if (depth == 0) {
-        std::cout << "--> ";
+        cout << "--> ";
     }
     else if (isLeft) {
-        std::cout << "`--> ";
+        cout << "`--> ";
     }
     else {
-        std::cout << ".--> ";
+        cout << ".--> ";
     }
-    std::cout << node->value << std::endl;
+    cout << node->value << endl;
     printPretty(node->left, depth + 1, true);
 }
 
@@ -142,6 +148,12 @@ bool BST::search(int value) {
     return false;
 }
 
+void insertAuto(BST& tree, int N) {
+    for (int i = 0; i < N; ++i) {
+        tree.insert(rand() % 100 + 1);
+    }
+}
+
 /*
     1. Формирование бинарного дерева из N элементов
     a. N rand элементов  
@@ -149,9 +161,10 @@ bool BST::search(int value) {
     c. N file элементов
 */
 
-void createTree() {
-    BST tree;
-
+void createTree(Logis& log) {
+    BST tree{};
+    currentItems = 0;
+    currentChoose = 0;
     do {
         while (true) {
             show_menu(currentItems, countItems, items, "МЕНЮ");
@@ -164,6 +177,8 @@ void createTree() {
 
         switch (currentItems) {
         case 0:
+        {
+            int N;
             clear();
             while (true) {
                 show_menu(currentChoose, coutChooseItems, ChooseItems, "Выбор функции");
@@ -173,7 +188,28 @@ void createTree() {
                 if (key == 80 && currentChoose < coutChooseItems - 1) currentChoose++;
                 if (key == 13) break;
             }
+            switch (currentChoose) {
+            case 0:
+            {
+                cout << "Введи N: ";
+                cin >> N;
+
+                MEASURE("BST", "Insert Auto", insertAuto(tree, N));
+
+                tree.printPretty();
+                pause();
+                clear();
+            }
+            }
+
+
+
+
         }
+
+
+        }
+
 
 
 
@@ -185,27 +221,4 @@ void createTree() {
     } while (currentItems != countItems - 1);
 
 
-    std::cout << "Введите числа:\n";
-    int x;
-    while (true) {
-        std::cin >> x;
-        if (x == 0) break;
-        tree.insert(x);
-    }
-
-    std::cout << "\nДерево:\n";
-    tree.printPretty();
-
-    std::cout << "\nПоиск чисел (0 — выход):\n";
-
-    while (true) {
-        std::cin >> x;
-        if (x == 0) break;
-
-        if (tree.search(x))
-            std::cout << "Найдено\n";
-        else
-            std::cout << "Не найдено\n";
-    }
 }
-
