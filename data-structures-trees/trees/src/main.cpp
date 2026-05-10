@@ -10,11 +10,60 @@ int main()
 {
     setlocale(0, "ru");
     Logis log;
-    createTree(log);
-   
+    do {
+        while (true) {
+            show_menu(currentGlobal, countGlobal, itemsGlobal, "лемч");
+            int key = _getch();
 
+            if (key == 72 && currentGlobal > 0) currentGlobal--;
+            if (key == 80 && currentGlobal < countGlobal - 1) currentGlobal++;
+            if (key == 13) break;
+        }
+        switch (currentGlobal) {
+        case 0:
+        {
+            clear();
+            BinaryTree tree(1);
+            pause();
+            clear();
+            break;
+        }
+        case 1:
+        {   
+            clear();
+            createTree(log);
+            clear();
+            break;
+        }
+        case 2:
+        {
+            break;
+        }
+        case 3:
+        {
+            break;
+        }
+        case 4:
+        {
+            clear();
+            showSplitScreen(log);
+            _getch();
+            clear();
+            break;
+        }
+        case 5:
+        {
+            break;
+        }
+        case 6:
+        {
+            break;
+        }
+        }
 
-	return 0;
+    } while (currentGlobal != countGlobal - 1);
+	
+    return 0;
 
 }
 

@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 project(App)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(App
     trees/src/main.cpp

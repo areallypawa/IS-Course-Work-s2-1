@@ -7,6 +7,14 @@
 #include <vector>
 #include <map>
 
+#define GREEN "\033[32m"
+#define YELLOW "\033[33m"
+#define RED "\033[31m"
+#define RESET   "\033[0m"
+
+extern int currentGlobal;
+extern std::string itemsGlobal[];
+constexpr int countGlobal = 7;
 
 class Logis {
 private:
@@ -49,11 +57,14 @@ public:
     }
 };
 
-struct CategoryStats {
-    double total;
-    int count;
+struct CompareStats {
+    std::string operation;
 
-    CategoryStats() { total = 0; count = 0; };
+    double listTotal = 0;
+    double arrayTotal = 0;
+
+    int listCount = 0;
+    int arrayCount = 0;
 };
 
 void clear();
@@ -64,3 +75,16 @@ void pause();
 void hideCursor();
 void set_cords(int x, int y);
 void show_menu(int current, int size_items, const std::string items[], const std::string str);
+void displayStatsTable(Logis& logger,
+    int startX,
+    int startY,
+    int width,
+    int height);
+
+void displayDetailedLogs(Logis& logger,
+    int startX,
+    int startY,
+    int width,
+    int height);
+
+void showSplitScreen(Logis& logger);

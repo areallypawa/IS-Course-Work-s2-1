@@ -16,9 +16,8 @@ string items[] =
 {
     "Создать дерево",
     "Вывести дерево",
-    "Сравнение скорости -> вставки / удаления / получения", 
+    "Удалить элемент",
     "Обход дерева",
-    "Очистить логи",
     "Выход"
 };
 
@@ -50,8 +49,6 @@ void BST::deleteTree(Node* node) {
 }
 
 BST::~BST() {
-    cout << "DESTRUCT BST\n";
-    pause();
     deleteTree(root);
 }
 
@@ -100,7 +97,7 @@ void BST::printPretty(Node* node, int depth, bool isLeft) {
     else {
         cout << ".--> ";
     }
-    cout << node->value << endl;
+    cout << node->value << '\n';
     printPretty(node->left, depth + 1, true);
 }
 
@@ -131,6 +128,47 @@ void BST::insert(int value) {
             current = current->right;
         }
     }
+}
+
+BST::Node* BST::findMin(Node* node) {
+    while (node && node->left)
+        node = node->left;
+    return node;
+}
+
+BST::Node* BST::deleteNode(Node* node, int value) {
+    if (!node) return nullptr;
+
+    if (value < node->value) {
+        node->left = deleteNode(node->left, value);
+    }
+    else if (value > node->value) {
+        node->right = deleteNode(node->right, value);
+    }
+    else {
+        if (!node->left) {
+            Node* temp = node->right;
+            delete node;
+            return temp;
+        }
+        else if (!node->right) {
+            Node* temp = node->left;
+            delete node;
+            return temp;
+        }
+
+        Node* temp = findMin(node->right);
+
+        node->value = temp->value;
+
+        node->right = deleteNode(node->right, temp->value);
+    }
+
+    return node;
+}
+
+void BST::deleteElement(int value) {
+    root = deleteNode(root, value);
 }
 
 bool BST::search(int value) {
@@ -201,13 +239,57 @@ void createTree(Logis& log) {
                 clear();
             }
             }
-
-
-
+            break;
+        }
+        case 1:
+        {
+            clear();
+            if (!tree.getRoot()) {
+                cout<< RED << "Двоичное дерево поиска отсутствует" << endl << RESET;
+                pause();
+                clear();
+                break;
+            }
+            cout << GREEN << "Двоичное дерево поиска:" << endl << endl << RESET;
+            MEASURE("BST", "Print", tree.printPretty(););
+            
+            pause();
+            clear();
+            break;
+        }
+        case 2:
+        {
+            int num;
+            clear();
+            if (!tree.getRoot()) {
+                cout << RED << "Двоичное дерево поиска отсутствует" << endl << RESET;
+                pause();
+                clear();
+                break;
+            }
+            cout << "Введите число которое необходимо удалить: " << '\n';
+            cin >> num;
+            if (!tree.search(num)) {
+                clear();
+                cout << RED << "Такой элемент отсутствует!!!" << '\n' << RESET;
+                clear();
+                pause();
+                break;
+            }
+            cout << "BST До удаления:" << '\n';
+            tree.printPretty();
+            MEASURE("BST", "Delete", tree.deleteElement(num));
+            cout << "BST После удаления:" << '\n';
+            tree.printPretty();
+            pause();
+            clear();
+            break;
+        }
+        case 3:
+        {
+            break;
 
         }
-
-
         }
 
 

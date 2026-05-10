@@ -15,7 +15,7 @@ extern int currentChoose;
 extern std::string items[];
 extern std::string ChooseItems[];
 
-constexpr int countItems = 6;
+constexpr int countItems = 5;
 constexpr int coutChooseItems = 3;
 
 /*
@@ -38,7 +38,8 @@ private:
 
 	void print(Node* node);
 	void printPretty(Node* node, int depth, bool isLeft);
-
+	Node* deleteNode(Node* node, int value);
+	Node* findMin(Node* node);
 public:
 	BST();
 	~BST();
@@ -51,7 +52,7 @@ public:
 	void insert(int value);
 	bool search(int value);
 	void deleteTree(Node* node);
-
+	void deleteElement(int value);
 	void print();
 	void printPretty();
 
