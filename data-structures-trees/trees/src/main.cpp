@@ -6,6 +6,8 @@
 #include "avl.h"
 #include "red_black.h"
 
+using namespace std;
+
 int main()
 {
     setlocale(0, "ru");
@@ -53,6 +55,11 @@ int main()
         }
         case 5:
         {
+            clear();
+            log.delLog();
+            cout << GREEN << "Логи очищенны" << RESET;
+            pause();
+            clear();
             break;
         }
         case 6:

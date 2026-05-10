@@ -32,6 +32,7 @@ private:
 
 public:
     void addLog(std::string category, std::string name, double duration);
+    void delLog();
 
     template<typename Func>
     auto measureTime(std::string category, std::string name, Func f) {

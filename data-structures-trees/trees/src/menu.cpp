@@ -19,6 +19,11 @@ void Logis::addLog(string category, string name, double duration)
     logs.emplace_back(category, name, duration);
 }
 
+void Logis::delLog() 
+{
+    logs.clear();
+}
+
 void clear() {
 #ifdef _WIN32
     system("cls");

@@ -3,6 +3,7 @@
 #include <iterator>
 #include <string>
 #include <conio.h>
+#include <sstream>
 #include <random>
 #include "menu.h"
 /*
@@ -18,6 +19,15 @@ extern std::string ChooseItems[];
 constexpr int countItems = 5;
 constexpr int coutChooseItems = 3;
 
+struct trunk {
+	trunk* prev;
+	std::string str;
+
+	trunk(trunk* prev, std::string str) {
+		this->prev = prev;
+		this->str = str;
+	}
+};
 /*
 	SERVICE CODE
 */
@@ -37,9 +47,14 @@ private:
 	Node* root;
 
 	void print(Node* node);
-	void printPretty(Node* node, int depth, bool isLeft);
+	void printPretty(Node* node, trunk* prev, bool isLeft, std::ostream& out);
 	Node* deleteNode(Node* node, int value);
 	Node* findMin(Node* node);
+
+	void inOrder(Node* node);
+	void preOrder(Node* node);
+	void postOrder(Node* node);
+	void levelOrder(Node* node);
 public:
 	BST();
 	~BST();
@@ -50,13 +65,19 @@ public:
 	void addLeft(Node* parent, int value);
 	void addRight(Node* parent, int value);
 	void insert(int value);
+	void insertFromInput();
 	bool search(int value);
 	void deleteTree(Node* node);
 	void deleteElement(int value);
 	void print();
-	void printPretty();
+	void printPretty(Node* root, std::ostream& out);
 
+	void inOrder();
+	void preOrder();
+	void postOrder();
+	void levelOrder();
 };
 
+void showTrunk(trunk* p, std::ostream& out);
 void insertAuto(BST& tree, int N);
 void createTree(Logis& log);
