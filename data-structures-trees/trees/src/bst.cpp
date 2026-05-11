@@ -1,4 +1,4 @@
-#include "bst.h"
+п»ї#include "bst.h"
 
 #define MEASURE(cat, name, expr) \
     do { log.measureTime(cat, name, [&]() { expr; }); } while(0)
@@ -14,19 +14,19 @@ int currentChoose = 0;
 
 string items[] =
 {
-    "Создать дерево",
-    "Вывести дерево",
-	"Получить элемент",
-    "Удалить элемент",
-    "Обход дерева",
-    "Выход"
+    "РЎРѕР·РґР°С‚СЊ РґРµСЂРµРІРѕ",
+    "Р’С‹РІРµСЃС‚Рё РґРµСЂРµРІРѕ",
+	"РџРѕР»СѓС‡РёС‚СЊ СЌР»РµРјРµРЅС‚",
+    "РЈРґР°Р»РёС‚СЊ СЌР»РµРјРµРЅС‚",
+    "РћР±С…РѕРґ РґРµСЂРµРІР°",
+    "Р’С‹С…РѕРґ"
 };
 
 string ChooseItems[] =
 {
-    "Рандом",
-    "Ввести вручную",
-    "Считать с файла",
+    "Р Р°РЅРґРѕРј",
+    "Р’РІРµСЃС‚Рё РІСЂСѓС‡РЅСѓСЋ",
+    "РЎС‡РёС‚Р°С‚СЊ СЃ С„Р°Р№Р»Р°",
 };
 
 
@@ -155,7 +155,7 @@ void BST::insert(int value) {
 }
 
 void BST::insertFromInput() {
-    cout << "Введи числа: ";
+    cout << "Р’РІРµРґРё С‡РёСЃР»Р°: ";
 
     string line;
     getline(cin, line);
@@ -296,7 +296,7 @@ void BST::insertFromFile(const string& filename) {
 
     if (!file.is_open()) {
         clear();
-        cout << RED << "Ошибка открытия файла\n" << RESET;
+        cout << RED << "РћС€РёР±РєР° РѕС‚РєСЂС‹С‚РёСЏ С„Р°Р№Р»Р°\n" << RESET;
         return;
     }
 
@@ -315,7 +315,7 @@ void createTree(Logis& log) {
     currentChoose = 0;
     do {
         while (true) {
-            show_menu(currentItems, countItems, items, "МЕНЮ");
+            show_menu(currentItems, countItems, items, "РњР•РќР®");
             int key = _getch();
 
             if (key == 72 && currentItems > 0) currentItems--;
@@ -330,7 +330,7 @@ void createTree(Logis& log) {
 			tree.clear();
             clear();
             while (true) {
-                show_menu(currentChoose, coutChooseItems, ChooseItems, "Выбор функции");
+                show_menu(currentChoose, coutChooseItems, ChooseItems, "Р’С‹Р±РѕСЂ С„СѓРЅРєС†РёРё");
                 int key = _getch();
 
                 if (key == 72 && currentChoose > 0) currentChoose--;
@@ -340,7 +340,7 @@ void createTree(Logis& log) {
             switch (currentChoose) {
             case 0:
             {
-                cout << "Введи N: ";
+                cout << "Р’РІРµРґРё N: ";
                 cin >> N;
 
                 MEASURE("BST", "Insert Auto", insertAuto(tree, N));
@@ -375,12 +375,12 @@ void createTree(Logis& log) {
         {
             clear();
             if (!tree.getRoot()) {
-                cout<< RED << "Двоичное дерево поиска отсутствует" << '\n' << RESET;
+                cout<< RED << "Р”РІРѕРёС‡РЅРѕРµ РґРµСЂРµРІРѕ РїРѕРёСЃРєР° РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚" << '\n' << RESET;
                 pause();
                 clear();
                 break;
             }
-            cout << GREEN << "Двоичное дерево поиска:" << '\n' << '\n' << RESET;
+            cout << GREEN << "Р”РІРѕРёС‡РЅРѕРµ РґРµСЂРµРІРѕ РїРѕРёСЃРєР°:" << '\n' << '\n' << RESET;
             MEASURE("BST", "Print", tree.printPretty(tree.getRoot(), cout));
             
             pause();
@@ -392,26 +392,26 @@ void createTree(Logis& log) {
             int num;
             clear();
             if (!tree.getRoot()) {
-                cout << RED << "Двоичное дерево поиска отсутствует" << '\n' << RESET;
+                cout << RED << "Р”РІРѕРёС‡РЅРѕРµ РґРµСЂРµРІРѕ РїРѕРёСЃРєР° РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚" << '\n' << RESET;
                 pause();
                 clear();
                 break;
             }
             cout << "BST:" << '\n';
             tree.printPretty(tree.getRoot(), cout);
-            cout << "Введите число которое необходимо найти: " << '\n';
+            cout << "Р’РІРµРґРёС‚Рµ С‡РёСЃР»Рѕ РєРѕС‚РѕСЂРѕРµ РЅРµРѕР±С…РѕРґРёРјРѕ РЅР°Р№С‚Рё: " << '\n';
             cin >> num;
 			MEASURE("BST", "Search", tree.search(num));
             if (tree.search(num)) {
                 clear();
-                cout << GREEN << "Элемент найден" << '\n' << RESET;
+                cout << GREEN << "Р­Р»РµРјРµРЅС‚ РЅР°Р№РґРµРЅ" << '\n' << RESET;
                 pause();
                 clear();
                 break;
             }
             else {
                 clear();
-                cout << RED << "Такой элемент отсутствует!!!" << '\n' << RESET;
+                cout << RED << "РўР°РєРѕР№ СЌР»РµРјРµРЅС‚ РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚!!!" << '\n' << RESET;
                 pause();
                 clear();
                 break;
@@ -422,24 +422,24 @@ void createTree(Logis& log) {
             int num;
             clear();
             if (!tree.getRoot()) {
-                cout << RED << "Двоичное дерево поиска отсутствует" << '\n' << RESET;
+                cout << RED << "Р”РІРѕРёС‡РЅРѕРµ РґРµСЂРµРІРѕ РїРѕРёСЃРєР° РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚" << '\n' << RESET;
                 pause();
                 clear();
                 break;
             }
-            cout << "BST До удаления:" << '\n';
+            cout << "BST Р”Рѕ СѓРґР°Р»РµРЅРёСЏ:" << '\n';
             tree.printPretty(tree.getRoot(), cout);
-            cout << "Введите число которое необходимо удалить: " << '\n';
+            cout << "Р’РІРµРґРёС‚Рµ С‡РёСЃР»Рѕ РєРѕС‚РѕСЂРѕРµ РЅРµРѕР±С…РѕРґРёРјРѕ СѓРґР°Р»РёС‚СЊ: " << '\n';
             cin >> num;
             if (!tree.search(num)) {
                 clear();
-                cout << RED << "Такой элемент отсутствует!!!" << '\n' << RESET;
+                cout << RED << "РўР°РєРѕР№ СЌР»РµРјРµРЅС‚ РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚!!!" << '\n' << RESET;
                 pause();
                 clear();
                 break;
             }
             MEASURE("BST", "Delete", tree.deleteElement(num));
-            cout << "BST После удаления:" << '\n';
+            cout << "BST РџРѕСЃР»Рµ СѓРґР°Р»РµРЅРёСЏ:" << '\n';
             tree.printPretty(tree.getRoot(), cout);
             pause();
             clear();
@@ -449,18 +449,18 @@ void createTree(Logis& log) {
         {
 			clear();
             if (!tree.getRoot()) {
-                cout << RED << "Двоичное дерево поиска отсутствует" << '\n' << RESET;
+                cout << RED << "Р”РІРѕРёС‡РЅРѕРµ РґРµСЂРµРІРѕ РїРѕРёСЃРєР° РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚" << '\n' << RESET;
                 pause();
                 clear();
                 break;
             }
-			cout << "Прямой обход: " << '\n';
+			cout << "РџСЂСЏРјРѕР№ РѕР±С…РѕРґ: " << '\n';
             MEASURE("BST", "PreOrder", tree.preOrder());
-            cout << "\nСимметричный обход: " << '\n';
+            cout << "\nРЎРёРјРјРµС‚СЂРёС‡РЅС‹Р№ РѕР±С…РѕРґ: " << '\n';
             MEASURE("BST", "InOrder", tree.inOrder());
-            cout << "\nОбратный обход: " << '\n';
+            cout << "\nРћР±СЂР°С‚РЅС‹Р№ РѕР±С…РѕРґ: " << '\n';
             MEASURE("BST", "PostOrder", tree.postOrder());
-            cout << "\nПострочный обход: " << '\n';
+            cout << "\nРџРѕСЃС‚СЂРѕС‡РЅС‹Р№ РѕР±С…РѕРґ: " << '\n';
             MEASURE("BST", "LevelOrder", tree.levelOrder());
             cout << '\n' << "-------------------------------------" << '\n';
 			tree.printPretty(tree.getRoot(), cout);
