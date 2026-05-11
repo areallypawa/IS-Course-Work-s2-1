@@ -48,6 +48,11 @@ void BST::deleteTree(Node* node) {
     delete node;
 }
 
+void BST::clear() {
+    deleteTree(root);
+    root = nullptr;
+}
+
 BST::~BST() {
     deleteTree(root);
 }
@@ -82,10 +87,10 @@ void BST::print() {
     print(root);
 }
 
-void BST::printPretty(Node* node, trunk* prev, bool isLeft, std::ostream& out) {
+void BST::printPretty(Node* node, trunk* prev, bool isLeft, ostream& out) {
     if (!node) return;
 
-    std::string prev_str = "    ";
+    string prev_str = "    ";
     trunk tmp(prev, prev_str);
 
     printPretty(node->right, &tmp, false, out);
@@ -113,13 +118,13 @@ void BST::printPretty(Node* node, trunk* prev, bool isLeft, std::ostream& out) {
     printPretty(node->left, &tmp, true, out);
 }
 
-void showTrunk(trunk* p, std::ostream& out) {
+void showTrunk(trunk* p, ostream& out) {
     if (!p) return;
     showTrunk(p->prev, out);
     out << p->str;
 }
 
-void BST::printPretty(Node* root, std::ostream& out) {
+void BST::printPretty(Node* root, ostream& out) {
     printPretty(root, nullptr, false, out);
 }
 
@@ -252,14 +257,14 @@ void BST::postOrder(Node* node) {
 void BST::levelOrder(Node* node) {
     if (!node) return;
 
-    std::queue<Node*> q;
+    queue<Node*> q;
     q.push(node);
 
     while (!q.empty()) {
         Node* current = q.front();
         q.pop();
 
-        std::cout << current->value << " ";
+        cout << current->value << " ";
 
         if (current->left)
             q.push(current->left);
@@ -283,6 +288,24 @@ void BST::postOrder() {
 
 void BST::levelOrder() {
     levelOrder(root);
+}
+
+void BST::insertFromFile(const string& filename) {
+    ifstream file(filename);
+
+    if (!file.is_open()) {
+        clear();
+        cout << RED << "Ошибка открытия файла\n" << RESET;
+        return;
+    }
+
+    int value;
+
+    while (file >> value) {
+        insert(value);
+    }
+
+    file.close();
 }
 
 /*
@@ -310,6 +333,7 @@ void createTree(Logis& log) {
         case 0:
         {
             int N;
+			tree.clear();
             clear();
             while (true) {
                 show_menu(currentChoose, coutChooseItems, ChooseItems, "Выбор функции");
@@ -343,7 +367,11 @@ void createTree(Logis& log) {
             }
             case 2:
             {
+				MEASURE("BST", "Insert From File", tree.insertFromFile("data/input.txt"));
 
+				tree.printPretty(tree.getRoot(), cout);
+                pause();
+				clear();
                 break;
             }
             }
@@ -353,12 +381,12 @@ void createTree(Logis& log) {
         {
             clear();
             if (!tree.getRoot()) {
-                cout<< RED << "Двоичное дерево поиска отсутствует" << endl << RESET;
+                cout<< RED << "Двоичное дерево поиска отсутствует" << '\n' << RESET;
                 pause();
                 clear();
                 break;
             }
-            cout << GREEN << "Двоичное дерево поиска:" << endl << endl << RESET;
+            cout << GREEN << "Двоичное дерево поиска:" << '\n' << '\n' << RESET;
             MEASURE("BST", "Print", tree.printPretty(tree.getRoot(), cout));
             
             pause();
@@ -370,22 +398,22 @@ void createTree(Logis& log) {
             int num;
             clear();
             if (!tree.getRoot()) {
-                cout << RED << "Двоичное дерево поиска отсутствует" << endl << RESET;
+                cout << RED << "Двоичное дерево поиска отсутствует" << '\n' << RESET;
                 pause();
                 clear();
                 break;
             }
+            cout << "BST До удаления:" << '\n';
+            tree.printPretty(tree.getRoot(), cout);
             cout << "Введите число которое необходимо удалить: " << '\n';
             cin >> num;
             if (!tree.search(num)) {
                 clear();
                 cout << RED << "Такой элемент отсутствует!!!" << '\n' << RESET;
-                clear();
                 pause();
+                clear();
                 break;
             }
-            cout << "BST До удаления:" << '\n';
-            tree.printPretty(tree.getRoot(), cout);
             MEASURE("BST", "Delete", tree.deleteElement(num));
             cout << "BST После удаления:" << '\n';
             tree.printPretty(tree.getRoot(), cout);
@@ -396,6 +424,12 @@ void createTree(Logis& log) {
         case 3:
         {
 			clear();
+            if (!tree.getRoot()) {
+                cout << RED << "Двоичное дерево поиска отсутствует" << '\n' << RESET;
+                pause();
+                clear();
+                break;
+            }
 			cout << "Прямой обход: " << '\n';
             MEASURE("BST", "PreOrder", tree.preOrder());
             cout << "\nСимметричный обход: " << '\n';
@@ -404,7 +438,8 @@ void createTree(Logis& log) {
             MEASURE("BST", "PostOrder", tree.postOrder());
             cout << "\nПострочный обход: " << '\n';
             MEASURE("BST", "LevelOrder", tree.levelOrder());
-            cout << '\n';
+            cout << "-------------------------------------" << '\n';
+			tree.printPretty(tree.getRoot(), cout);
             pause();
 			clear();
 

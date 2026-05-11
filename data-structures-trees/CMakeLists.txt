@@ -18,4 +18,5 @@ target_include_directories(App PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/trees/include
 )
 
+file(COPY data DESTINATION ${CMAKE_BINARY_DIR})
 

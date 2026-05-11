@@ -121,8 +121,6 @@ void displayStatsTable(Logis& logger,
 
     map<string, TreeStats> statsMap;
 
-    // ==================== —¡Œ– —“¿“»—“» » ====================
-
     for (const auto& log : logs) {
 
         if (statsMap.find(log.name) == statsMap.end()) {
@@ -154,8 +152,6 @@ void displayStatsTable(Logis& logger,
         }
     }
 
-    // ==================== “¿¡À»÷¿ ====================
-
     int currentY = startY + 1;
 
     set_cords(startX + 2, currentY);
@@ -178,8 +174,6 @@ void displayStatsTable(Logis& logger,
         cout << "-";
 
     currentY++;
-
-    // ==================== ¬€¬Œƒ ====================
 
     for (auto& pair : statsMap) {
 
@@ -259,7 +253,6 @@ void displayDetailedLogs(Logis& logger,
 
     int currentY = startY + 1;
 
-    // «‡„ÓÎÓ‚ÍË
     set_cords(startX + 2, currentY);
     cout << "ŒÔÂ‡ˆËˇ";
 
@@ -267,7 +260,7 @@ void displayDetailedLogs(Logis& logger,
     cout << " ‡ÚÂ„ÓËˇ";
 
     set_cords(startX + 50, currentY);
-    cout << "¬ÂÏˇ (us)";
+    cout << "¬ÂÏˇ (ms)";
 
     currentY++;
 
@@ -278,7 +271,6 @@ void displayDetailedLogs(Logis& logger,
 
     currentY++;
 
-    // ÀÓ„Ë
     for (const auto& log : logs) {
 
         set_cords(startX + 2, currentY);
@@ -359,7 +351,6 @@ void showSplitScreen(Logis& logger) {
         windowHeight
     );
 
-    // ÕËÊÌˇˇ ÒÚÓÍ‡
     const auto& logs = logger.getLogs();
 
     int bstCount = 0;

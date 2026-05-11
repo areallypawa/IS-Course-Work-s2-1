@@ -4,8 +4,10 @@
 #include <string>
 #include <conio.h>
 #include <sstream>
+#include <fstream>
 #include <random>
 #include "menu.h"
+
 /*
 	SERVICE CODE
 */
@@ -61,11 +63,13 @@ public:
 
 	void setRoot(int value);
 	Node* getRoot();
+	void clear();
 
 	void addLeft(Node* parent, int value);
 	void addRight(Node* parent, int value);
 	void insert(int value);
 	void insertFromInput();
+	void insertFromFile(const std::string& filename);
 	bool search(int value);
 	void deleteTree(Node* node);
 	void deleteElement(int value);
