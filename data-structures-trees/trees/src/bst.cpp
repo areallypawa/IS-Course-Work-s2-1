@@ -1,4 +1,4 @@
-﻿#include "bst.h"
+#include "bst.h"
 
 #define MEASURE(cat, name, expr) \
     do { log.measureTime(cat, name, [&]() { expr; }); } while(0)

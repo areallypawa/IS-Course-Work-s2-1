@@ -9,9 +9,9 @@
 #include "menu.h"
 
 /*
-	Íå ðåàëèçîâàíî:
-	- Â îò÷åòå ñðàâíèòå ñêîðîñòü ðàáîòû áèíàðíîãî äåðåâà ñ ëèíåéíîé ñòðóêòóðîé (äâóñâÿçíûì ñïèñêîì èëè äèíàìè÷åñêèì ìàññèâîì) è ñäåëàéòå âûâîäû.
-	Îñòàëñÿ òîëüêî ïóíêò ñ ëèíåéíîé ñòðóêòóðîé, òàê êàê â ïðîöåññå ðåàëèçàöèè áûëî ïðèíÿòî ðåøåíèå íå ðåàëèçîâûâàòü äâóñâÿçíûé ñïèñîê, à èñïîëüçîâàòü äèíàìè÷åñêèé ìàññèâ (std::vector) äëÿ ñðàâíåíèÿ.
+	ÐÐµ Ñ€ÐµÐ°Ð»Ð¸Ð·Ð¾Ð²Ð°Ð½Ð¾:
+	- Ð’ Ð¾Ñ‚Ñ‡ÐµÑ‚Ðµ ÑÑ€Ð°Ð²Ð½Ð¸Ñ‚Ðµ ÑÐºÐ¾Ñ€Ð¾ÑÑ‚ÑŒ Ñ€Ð°Ð±Ð¾Ñ‚Ñ‹ Ð±Ð¸Ð½Ð°Ñ€Ð½Ð¾Ð³Ð¾ Ð´ÐµÑ€ÐµÐ²Ð° Ñ Ð»Ð¸Ð½ÐµÐ¹Ð½Ð¾Ð¹ ÑÑ‚Ñ€ÑƒÐºÑ‚ÑƒÑ€Ð¾Ð¹ (Ð´Ð²ÑƒÑÐ²ÑÐ·Ð½Ñ‹Ð¼ ÑÐ¿Ð¸ÑÐºÐ¾Ð¼ Ð¸Ð»Ð¸ Ð´Ð¸Ð½Ð°Ð¼Ð¸Ñ‡ÐµÑÐºÐ¸Ð¼ Ð¼Ð°ÑÑÐ¸Ð²Ð¾Ð¼) Ð¸ ÑÐ´ÐµÐ»Ð°Ð¹Ñ‚Ðµ Ð²Ñ‹Ð²Ð¾Ð´Ñ‹.
+	ÐžÑÑ‚Ð°Ð»ÑÑ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ð¿ÑƒÐ½ÐºÑ‚ Ñ Ð»Ð¸Ð½ÐµÐ¹Ð½Ð¾Ð¹ ÑÑ‚Ñ€ÑƒÐºÑ‚ÑƒÑ€Ð¾Ð¹, Ñ‚Ð°Ðº ÐºÐ°Ðº Ð² Ð¿Ñ€Ð¾Ñ†ÐµÑÑÐµ Ñ€ÐµÐ°Ð»Ð¸Ð·Ð°Ñ†Ð¸Ð¸ Ð±Ñ‹Ð»Ð¾ Ð¿Ñ€Ð¸Ð½ÑÑ‚Ð¾ Ñ€ÐµÑˆÐµÐ½Ð¸Ðµ Ð½Ðµ Ñ€ÐµÐ°Ð»Ð¸Ð·Ð¾Ð²Ñ‹Ð²Ð°Ñ‚ÑŒ Ð´Ð²ÑƒÑÐ²ÑÐ·Ð½Ñ‹Ð¹ ÑÐ¿Ð¸ÑÐ¾Ðº, Ð° Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÑŒ Ð´Ð¸Ð½Ð°Ð¼Ð¸Ñ‡ÐµÑÐºÐ¸Ð¹ Ð¼Ð°ÑÑÐ¸Ð² (std::vector) Ð´Ð»Ñ ÑÑ€Ð°Ð²Ð½ÐµÐ½Ð¸Ñ.
 */
 
 /*
@@ -27,11 +27,13 @@ extern std::string ChooseItems[];
 constexpr int countItems = 6;
 constexpr int coutChooseItems = 3;
 
-struct trunk {
-	trunk* prev;
+struct trunk
+{
+	trunk *prev;
 	std::string str;
 
-	trunk(trunk* prev, std::string str) {
+	trunk(trunk *prev, std::string str)
+	{
 		this->prev = prev;
 		this->str = str;
 	}
@@ -43,44 +45,44 @@ struct trunk {
 class BST
 {
 private:
-
-	struct Node {
+	struct Node
+	{
 		int value;
-		Node* left;
-		Node* right;
-
+		Node *left;
+		Node *right;
 
 		Node(int value);
 	};
-	Node* root;
+	Node *root;
 
-	void print(Node* node);
-	void printPretty(Node* node, trunk* prev, bool isLeft, std::ostream& out);
-	Node* deleteNode(Node* node, int value);
-	Node* findMin(Node* node);
+	void print(Node *node);
+	void printPretty(Node *node, trunk *prev, bool isLeft, std::ostream &out);
+	Node *deleteNode(Node *node, int value);
+	Node *findMin(Node *node);
 
-	void inOrder(Node* node);
-	void preOrder(Node* node);
-	void postOrder(Node* node);
-	void levelOrder(Node* node);
+	void inOrder(Node *node);
+	void preOrder(Node *node);
+	void postOrder(Node *node);
+	void levelOrder(Node *node);
+
 public:
 	BST();
 	~BST();
 
 	void setRoot(int value);
-	Node* getRoot();
+	Node *getRoot();
 	void clear();
 
-	void addLeft(Node* parent, int value);
-	void addRight(Node* parent, int value);
+	void addLeft(Node *parent, int value);
+	void addRight(Node *parent, int value);
 	void insert(int value);
 	void insertFromInput();
-	void insertFromFile(const std::string& filename);
+	void insertFromFile(const std::string &filename);
 	bool search(int value);
-	void deleteTree(Node* node);
+	void deleteTree(Node *node);
 	void deleteElement(int value);
 	void print();
-	void printPretty(Node* root, std::ostream& out);
+	void printPretty(Node *root, std::ostream &out);
 
 	void inOrder();
 	void preOrder();
@@ -88,6 +90,6 @@ public:
 	void levelOrder();
 };
 
-void showTrunk(trunk* p, std::ostream& out);
-void insertAuto(BST& tree, int N);
-void createTree(Logis& log);
+void showTrunk(trunk *p, std::ostream &out);
+void insertAuto(BST &tree, int N);
+void createTree(Logis &log);

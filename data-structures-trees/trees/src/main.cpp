@@ -14,7 +14,7 @@ int main()
     Logis log;
     do {
         while (true) {
-            show_menu(currentGlobal, countGlobal, itemsGlobal, "ÌÅÍÞ");
+            show_menu(currentGlobal, countGlobal, itemsGlobal, "ÐœÐ•ÐÐ®");
             int key = _getch();
 
             if (key == 72 && currentGlobal > 0) currentGlobal--;
@@ -59,7 +59,7 @@ int main()
         {
             clear();
             log.delLog();
-            cout << GREEN << "Ëîãè î÷èùåííû" << RESET;
+            cout << GREEN << "Ð›Ð¾Ð³Ð¸ Ð¾Ñ‡Ð¸Ñ‰ÐµÐ½Ð½Ñ‹" << RESET;
             pause();
             clear();
             break;

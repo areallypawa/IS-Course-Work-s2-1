@@ -4,13 +4,13 @@ using namespace std;
 
 int currentGlobal = 0;
 string itemsGlobal[] = {
-    "Работа с бинарным деревом (тест)",
-    "Работа с BST деревом",
-    "Работа с AVL деревом",
-    "Работа с Red-Black деревом",
-    "Смотреть логи",
-    "Очистить логи",
-    "Выход"
+    "Р Р°Р±РѕС‚Р° СЃ Р±РёРЅР°СЂРЅС‹Рј РґРµСЂРµРІРѕРј (С‚РµСЃС‚)",
+    "Р Р°Р±РѕС‚Р° СЃ BST РґРµСЂРµРІРѕРј",
+    "Р Р°Р±РѕС‚Р° СЃ AVL РґРµСЂРµРІРѕРј",
+    "Р Р°Р±РѕС‚Р° СЃ Red-Black РґРµСЂРµРІРѕРј",
+    "РЎРјРѕС‚СЂРµС‚СЊ Р»РѕРіРё",
+    "РћС‡РёСЃС‚РёС‚СЊ Р»РѕРіРё",
+    "Р’С‹С…РѕРґ"
 };
 
 
@@ -103,7 +103,7 @@ void displayStatsTable(Logis& logger,
 
     if (logs.empty()) {
         set_cords(startX + 2, startY + 2);
-        cout << "Нет данных";
+        cout << "РќРµС‚ РґР°РЅРЅС‹С…";
         return;
     }
 
@@ -247,20 +247,20 @@ void displayDetailedLogs(Logis& logger,
 
     if (logs.empty()) {
         set_cords(startX + 2, startY + 2);
-        cout << "Нет данных";
+        cout << "РќРµС‚ РґР°РЅРЅС‹С…";
         return;
     }
 
     int currentY = startY + 1;
 
     set_cords(startX + 2, currentY);
-    cout << "Операция";
+    cout << "РћРїРµСЂР°С†РёСЏ";
 
     set_cords(startX + 30, currentY);
-    cout << "Категория";
+    cout << "РљР°С‚РµРіРѕСЂРёСЏ";
 
     set_cords(startX + 50, currentY);
-    cout << "Время (mcs)";
+    cout << "Р’СЂРµРјСЏ (mcs)";
 
     currentY++;
 
@@ -317,13 +317,13 @@ void showSplitScreen(Logis& logger) {
 
     int windowHeight = screenHeight - 2;
 
-    // Левая часть
+    // Р›РµРІР°СЏ С‡Р°СЃС‚СЊ
     drawWindow(
         0,
         0,
         leftWidth,
         windowHeight,
-        " СРАВНЕНИЕ BST vs AVL vs Red-Black "
+        " РЎР РђР’РќР•РќРР• BST vs AVL vs Red-Black "
     );
 
     displayStatsTable(
@@ -334,13 +334,13 @@ void showSplitScreen(Logis& logger) {
         windowHeight
     );
 
-    // Правая часть
+    // РџСЂР°РІР°СЏ С‡Р°СЃС‚СЊ
     drawWindow(
         leftWidth + 1,
         0,
         rightWidth,
         windowHeight,
-        " ДЕТАЛЬНЫЕ ЛОГИ "
+        " Р”Р•РўРђР›Р¬РќР«Р• Р›РћР“Р "
     );
 
     displayDetailedLogs(
@@ -384,7 +384,7 @@ void showSplitScreen(Logis& logger) {
 
     set_cords(0, screenHeight - 1);
 
-    cout << "Всего операций: " << logs.size();
+    cout << "Р’СЃРµРіРѕ РѕРїРµСЂР°С†РёР№: " << logs.size();
     cout << " | BST: " << bstCount;
     if (bstCount > 0) {
         cout << " avg " << bstTotal / bstCount << " mcs";
@@ -398,5 +398,5 @@ void showSplitScreen(Logis& logger) {
         cout << " avg " << rbTotal / rbCount << " mcs";
     }
     cout
-        << " | Нажмите любую клавишу...";
+        << " | РќР°Р¶РјРёС‚Рµ Р»СЋР±СѓСЋ РєР»Р°РІРёС€Сѓ...";
 }

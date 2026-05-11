@@ -96,9 +96,9 @@ void BinaryTree::buildDemoTree() {
 }
 
 void BinaryTree::printDemo() {
-    std::cout << "Îáû÷íûé âûâîä:\n";
+    std::cout << "ÐžÐ±Ñ‹Ñ‡Ð½Ñ‹Ð¹ Ð²Ñ‹Ð²Ð¾Ð´:\n";
     print();
 
-    std::cout << "\n\nÊðàñèâûé âûâîä:\n";
+    std::cout << "\n\nÐšÑ€Ð°ÑÐ¸Ð²Ñ‹Ð¹ Ð²Ñ‹Ð²Ð¾Ð´:\n";
     printPretty();
 }
