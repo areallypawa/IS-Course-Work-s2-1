@@ -14,33 +14,6 @@
 	Остался только пункт с линейной структурой, так как в процессе реализации было принято решение не реализовывать двусвязный список, а использовать динамический массив (std::vector) для сравнения.
 */
 
-/*
-	SERVICE CODE
-*/
-
-extern int currentItems;
-extern int currentChoose;
-
-extern std::string items[];
-extern std::string ChooseItems[];
-
-constexpr int countItems = 6;
-constexpr int coutChooseItems = 3;
-
-struct trunk
-{
-	trunk *prev;
-	std::string str;
-
-	trunk(trunk *prev, std::string str)
-	{
-		this->prev = prev;
-		this->str = str;
-	}
-};
-/*
-	SERVICE CODE
-*/
 
 class BST
 {
@@ -67,15 +40,16 @@ private:
 
 public:
 	BST();
+	void clear();
 	~BST();
 
 	void setRoot(int value);
 	Node *getRoot();
-	void clear();
 
 	void addLeft(Node *parent, int value);
 	void addRight(Node *parent, int value);
 	void insert(int value);
+	void insertAuto(int N);
 	void insertFromInput();
 	void insertFromFile(const std::string &filename);
 	bool search(int value);
@@ -91,5 +65,4 @@ public:
 };
 
 void showTrunk(trunk *p, std::ostream &out);
-void insertAuto(BST &tree, int N);
-void createTree(Logis &log);
+void createTreeBst(Logis &log);

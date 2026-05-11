@@ -3,6 +3,7 @@ using namespace std;
 
 
 int currentGlobal = 0;
+
 string itemsGlobal[] = {
     "Работа с бинарным деревом (тест)",
     "Работа с BST деревом",
@@ -13,6 +14,22 @@ string itemsGlobal[] = {
     "Выход"
 };
 
+string items[] =
+{
+    "Создать дерево",
+    "Вывести дерево",
+    "Получить элемент",
+    "Удалить элемент",
+    "Обход дерева",
+    "Выход"
+};
+
+string ChooseItems[] =
+{
+    "Рандом",
+    "Ввести вручную",
+    "Считать с файла",
+};
 
 void Logis::addLog(string category, string name, double duration)
 {
@@ -399,4 +416,10 @@ void showSplitScreen(Logis& logger) {
     }
     cout
         << " | Нажмите любую клавишу...";
+}
+
+void showTrunk(trunk* p, ostream& out) {
+    if (!p) return;
+    showTrunk(p->prev, out);
+    out << p->str;
 }

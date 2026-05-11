@@ -1,33 +1,13 @@
 #include "bst.h"
 
-#define MEASURE(cat, name, expr) \
-    do { log.measureTime(cat, name, [&]() { expr; }); } while(0)
-
 using namespace std;
 
 /* 
     SERVICE CODE 
 */
 
-int currentItems = 0;
-int currentChoose = 0;
-
-string items[] =
-{
-    "Создать дерево",
-    "Вывести дерево",
-	"Получить элемент",
-    "Удалить элемент",
-    "Обход дерева",
-    "Выход"
-};
-
-string ChooseItems[] =
-{
-    "Рандом",
-    "Ввести вручную",
-    "Считать с файла",
-};
+static int currentItems = 0;
+static int currentChoose = 0;
 
 
 /*
@@ -117,12 +97,6 @@ void BST::printPretty(Node* node, trunk* prev, bool isLeft, ostream& out) {
     }
     tmp.str = "   |";
     printPretty(node->left, &tmp, true, out);
-}
-
-void showTrunk(trunk* p, ostream& out) {
-    if (!p) return;
-    showTrunk(p->prev, out);
-    out << p->str;
 }
 
 void BST::printPretty(Node* root, ostream& out) {
@@ -224,9 +198,9 @@ bool BST::search(int value) {
     return false;
 }
 
-void insertAuto(BST& tree, int N) {
+void BST::insertAuto(int N) {
     for (int i = 0; i < N; ++i) {
-        tree.insert(rand() % 100 + 1);
+        insert(rand() % 199 - 99);
     }
 }
 
@@ -309,8 +283,8 @@ void BST::insertFromFile(const string& filename) {
     file.close();
 }
 
-void createTree(Logis& log) {
-    BST tree{};
+void createTreeBst(Logis& log) {
+    BST tree;
     currentItems = 0;
     currentChoose = 0;
     do {
@@ -343,7 +317,7 @@ void createTree(Logis& log) {
                 cout << "Введи N: ";
                 cin >> N;
 
-                MEASURE("BST", "Insert Auto", insertAuto(tree, N));
+                MEASURE("BST", "Insert Auto", tree.insertAuto(N));
 
                 tree.printPretty(tree.getRoot(), cout);
                 pause();

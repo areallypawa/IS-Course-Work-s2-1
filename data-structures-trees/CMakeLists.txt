@@ -12,7 +12,7 @@ add_executable(App
     trees/src/avl.cpp
     trees/src/red_black.cpp
     trees/src/menu.cpp
-)
+   )
 
 target_include_directories(App PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/trees/include
