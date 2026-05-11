@@ -41,13 +41,13 @@ public:
         if constexpr (std::is_void_v<decltype(f())>) {
             f();
             auto end = std::chrono::high_resolution_clock::now();
-            auto duration = std::chrono::duration<double, std::milli>(end - start);
+            auto duration = std::chrono::duration<double, std::micro>(end - start);
             addLog(category, name, duration.count());
         }
         else {
             auto result = f();
             auto end = std::chrono::high_resolution_clock::now();
-            auto duration = std::chrono::duration<double, std::milli>(end - start);
+            auto duration = std::chrono::duration<double, std::micro>(end - start);
             addLog(category, name, duration.count());
             return result;
         }

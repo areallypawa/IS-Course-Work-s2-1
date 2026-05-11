@@ -18,7 +18,7 @@ extern int currentChoose;
 extern std::string items[];
 extern std::string ChooseItems[];
 
-constexpr int countItems = 5;
+constexpr int countItems = 6;
 constexpr int coutChooseItems = 3;
 
 struct trunk {

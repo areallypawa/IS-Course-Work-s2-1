@@ -39,10 +39,12 @@ int main()
         }
         case 2:
         {
+			//AVL 
             break;
         }
         case 3:
         {
+			//Red-Black
             break;
         }
         case 4:
@@ -64,6 +66,7 @@ int main()
         }
         case 6:
         {
+			//Exit
             break;
         }
         }

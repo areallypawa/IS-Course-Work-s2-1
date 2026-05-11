@@ -196,7 +196,7 @@ void displayStatsTable(Logis& logger,
             double avg =
                 stat.bstTotal / stat.bstCount;
 
-            printf("%.1f ms", avg);
+            printf("%.1f mcs", avg);
         }
         else {
             cout << "---";
@@ -210,7 +210,7 @@ void displayStatsTable(Logis& logger,
             double avg =
                 stat.avlTotal / stat.avlCount;
 
-            printf("%.1f ms", avg);
+            printf("%.1f mcs", avg);
         }
         else {
             cout << "---";
@@ -224,7 +224,7 @@ void displayStatsTable(Logis& logger,
             double avg =
                 stat.rbTotal / stat.rbCount;
 
-            printf("%.1f ms", avg);
+            printf("%.1f mcs", avg);
         }
         else {
             cout << "---";
@@ -260,7 +260,7 @@ void displayDetailedLogs(Logis& logger,
     cout << "Категория";
 
     set_cords(startX + 50, currentY);
-    cout << "Время (ms)";
+    cout << "Время (mcs)";
 
     currentY++;
 
@@ -387,15 +387,15 @@ void showSplitScreen(Logis& logger) {
     cout << "Всего операций: " << logs.size();
     cout << " | BST: " << bstCount;
     if (bstCount > 0) {
-        cout << " avg " << bstTotal / bstCount << " ms";
+        cout << " avg " << bstTotal / bstCount << " mcs";
     }
     cout << " | AVL: " << avlCount;
     if (avlCount > 0) {
-        cout << " avg " << avlTotal / avlCount << " ms";
+        cout << " avg " << avlTotal / avlCount << " mcs";
     }
     cout << " | RB: " << rbCount;
     if (rbCount > 0) {
-        cout << " avg " << rbTotal / rbCount << " ms";
+        cout << " avg " << rbTotal / rbCount << " mcs";
     }
     cout
         << " | Нажмите любую клавишу...";

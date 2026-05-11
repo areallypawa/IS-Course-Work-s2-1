@@ -16,6 +16,7 @@ string items[] =
 {
     "Создать дерево",
     "Вывести дерево",
+	"Получить элемент",
     "Удалить элемент",
     "Обход дерева",
     "Выход"
@@ -308,13 +309,6 @@ void BST::insertFromFile(const string& filename) {
     file.close();
 }
 
-/*
-    1. Формирование бинарного дерева из N элементов
-    a. N rand элементов  
-    b. N user элементов
-    c. N file элементов
-*/
-
 void createTree(Logis& log) {
     BST tree{};
     currentItems = 0;
@@ -403,6 +397,36 @@ void createTree(Logis& log) {
                 clear();
                 break;
             }
+            cout << "BST:" << '\n';
+            tree.printPretty(tree.getRoot(), cout);
+            cout << "Введите число которое необходимо найти: " << '\n';
+            cin >> num;
+			MEASURE("BST", "Search", tree.search(num));
+            if (tree.search(num)) {
+                clear();
+                cout << GREEN << "Элемент найден" << '\n' << RESET;
+                pause();
+                clear();
+                break;
+            }
+            else {
+                clear();
+                cout << RED << "Такой элемент отсутствует!!!" << '\n' << RESET;
+                pause();
+                clear();
+                break;
+            }
+		}
+        case 3:
+        {
+            int num;
+            clear();
+            if (!tree.getRoot()) {
+                cout << RED << "Двоичное дерево поиска отсутствует" << '\n' << RESET;
+                pause();
+                clear();
+                break;
+            }
             cout << "BST До удаления:" << '\n';
             tree.printPretty(tree.getRoot(), cout);
             cout << "Введите число которое необходимо удалить: " << '\n';
@@ -421,7 +445,7 @@ void createTree(Logis& log) {
             clear();
             break;
         }
-        case 3:
+        case 4:
         {
 			clear();
             if (!tree.getRoot()) {
@@ -438,7 +462,7 @@ void createTree(Logis& log) {
             MEASURE("BST", "PostOrder", tree.postOrder());
             cout << "\nПострочный обход: " << '\n';
             MEASURE("BST", "LevelOrder", tree.levelOrder());
-            cout << "-------------------------------------" << '\n';
+            cout << '\n' << "-------------------------------------" << '\n';
 			tree.printPretty(tree.getRoot(), cout);
             pause();
 			clear();
