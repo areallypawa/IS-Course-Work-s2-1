@@ -10,11 +10,12 @@ using namespace std;
 
 int main()
 {
-    setlocale(0, "ru");
+    SetConsoleCP(CP_UTF8);
+    SetConsoleOutputCP(CP_UTF8);
     Logis log;
     do {
         while (true) {
-            show_menu(currentGlobal, countGlobal, itemsGlobal, "ÌÅÍÞ");
+            show_menu(currentGlobal, countGlobal, itemsGlobal, "ÐœÐ•ÐÐ®");
             int key = _getch();
 
             if (key == 72 && currentGlobal > 0) currentGlobal--;
@@ -33,18 +34,22 @@ int main()
         case 1:
         {   
             clear();
-            createTree(log);
+            createTreeBst(log);
             clear();
             break;
         }
         case 2:
         {
-			//AVL 
+            clear();
+            createTreeAvl(log);
+            clear();
             break;
         }
         case 3:
         {
-			//Red-Black
+            clear();
+            createTreeRb(log);
+            clear();
             break;
         }
         case 4:
@@ -59,7 +64,7 @@ int main()
         {
             clear();
             log.delLog();
-            cout << GREEN << "Ëîãè î÷èùåííû" << RESET;
+            cout << GREEN << "Ð›Ð¾Ð³Ð¸ Ð¾Ñ‡Ð¸Ñ‰ÐµÐ½Ð½Ñ‹" << RESET;
             pause();
             clear();
             break;
@@ -72,7 +77,7 @@ int main()
         }
 
     } while (currentGlobal != countGlobal - 1);
-	
+    log.delLog();
     return 0;
 
 }

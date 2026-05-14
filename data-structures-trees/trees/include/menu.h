@@ -7,14 +7,35 @@
 #include <vector>
 #include <map>
 
+#define MEASURE(cat, name, expr) \
+    do { log.measureTime(cat, name, [&]() { expr; }); } while(0)
+
 #define GREEN "\033[32m"
 #define YELLOW "\033[33m"
 #define RED "\033[31m"
 #define RESET   "\033[0m"
 
 extern int currentGlobal;
+
+constexpr int countItems = 6;
+constexpr int coutChooseItems = 3;
+
 extern std::string itemsGlobal[];
+extern std::string items[];
+extern std::string ChooseItems[];
 constexpr int countGlobal = 7;
+
+struct trunk
+{
+    trunk* prev;
+    std::string str;
+
+    trunk(trunk* prev, std::string str)
+    {
+        this->prev = prev;
+        this->str = str;
+    }
+};
 
 class Logis {
 private:

@@ -1,38 +1,9 @@
 #include "bst.h"
 
-#define MEASURE(cat, name, expr) \
-    do { log.measureTime(cat, name, [&]() { expr; }); } while(0)
-
 using namespace std;
 
-/* 
-    SERVICE CODE 
-*/
-
-int currentItems = 0;
-int currentChoose = 0;
-
-string items[] =
-{
-    "Ñîçäàòü äåðåâî",
-    "Âûâåñòè äåðåâî",
-	"Ïîëó÷èòü ýëåìåíò",
-    "Óäàëèòü ýëåìåíò",
-    "Îáõîä äåðåâà",
-    "Âûõîä"
-};
-
-string ChooseItems[] =
-{
-    "Ðàíäîì",
-    "Ââåñòè âðó÷íóþ",
-    "Ñ÷èòàòü ñ ôàéëà",
-};
-
-
-/*
-    SERVICE CODE
-*/
+static int currentItems = 0;
+static int currentChoose = 0;
 
 BST::Node::Node(int value) : value(value), left(nullptr), right(nullptr) {
 }
@@ -119,12 +90,6 @@ void BST::printPretty(Node* node, trunk* prev, bool isLeft, ostream& out) {
     printPretty(node->left, &tmp, true, out);
 }
 
-void showTrunk(trunk* p, ostream& out) {
-    if (!p) return;
-    showTrunk(p->prev, out);
-    out << p->str;
-}
-
 void BST::printPretty(Node* root, ostream& out) {
     printPretty(root, nullptr, false, out);
 }
@@ -155,7 +120,7 @@ void BST::insert(int value) {
 }
 
 void BST::insertFromInput() {
-    cout << "Ââåäè ÷èñëà: ";
+    cout << "Ð’Ð²ÐµÐ´Ð¸ Ñ‡Ð¸ÑÐ»Ð°: ";
 
     string line;
     getline(cin, line);
@@ -224,9 +189,9 @@ bool BST::search(int value) {
     return false;
 }
 
-void insertAuto(BST& tree, int N) {
+void BST::insertAuto(int N) {
     for (int i = 0; i < N; ++i) {
-        tree.insert(rand() % 100 + 1);
+        insert(rand() % 199 - 99);
     }
 }
 
@@ -296,7 +261,7 @@ void BST::insertFromFile(const string& filename) {
 
     if (!file.is_open()) {
         clear();
-        cout << RED << "Îøèáêà îòêðûòèÿ ôàéëà\n" << RESET;
+        cout << RED << "ÐžÑˆÐ¸Ð±ÐºÐ° Ð¾Ñ‚ÐºÑ€Ñ‹Ñ‚Ð¸Ñ Ñ„Ð°Ð¹Ð»Ð°\n" << RESET;
         return;
     }
 
@@ -309,13 +274,13 @@ void BST::insertFromFile(const string& filename) {
     file.close();
 }
 
-void createTree(Logis& log) {
-    BST tree{};
+void createTreeBst(Logis& log) {
+    BST tree;
     currentItems = 0;
     currentChoose = 0;
     do {
         while (true) {
-            show_menu(currentItems, countItems, items, "ÌÅÍÞ");
+            show_menu(currentItems, countItems, items, "ÐœÐ•ÐÐ®");
             int key = _getch();
 
             if (key == 72 && currentItems > 0) currentItems--;
@@ -327,10 +292,29 @@ void createTree(Logis& log) {
         case 0:
         {
             int N;
-			tree.clear();
+            int currentClear = 0;
+            string a[2] = { "Ð”Ð°", "ÐÐµÑ‚" };
+            if (tree.getRoot()) {
+                clear();
+                while (true) {
+                    show_menu(currentClear, 2, a, "ÐŸÐµÑ€ÐµÐ·Ð°Ð¿Ð¸ÑÐ°Ñ‚ÑŒ Ð´ÐµÑ€ÐµÐ²Ð¾?");
+                    int key = _getch();
+
+                    if (key == 72 && currentClear > 0) currentClear--;
+                    if (key == 80 && currentClear < 2 - 1) currentClear++;
+                    if (key == 13) break;
+                }
+                switch (currentClear) {
+                case 0:
+                {
+                    tree.clear();
+                    break;
+                }
+                }
+            }
             clear();
             while (true) {
-                show_menu(currentChoose, coutChooseItems, ChooseItems, "Âûáîð ôóíêöèè");
+                show_menu(currentChoose, coutChooseItems, ChooseItems, "Ð’Ñ‹Ð±Ð¾Ñ€ Ñ„ÑƒÐ½ÐºÑ†Ð¸Ð¸");
                 int key = _getch();
 
                 if (key == 72 && currentChoose > 0) currentChoose--;
@@ -340,12 +324,16 @@ void createTree(Logis& log) {
             switch (currentChoose) {
             case 0:
             {
-                cout << "Ââåäè N: ";
+                cout << "Ð’Ð²ÐµÐ´Ð¸ N: ";
                 cin >> N;
 
-                MEASURE("BST", "Insert Auto", insertAuto(tree, N));
+                MEASURE("BST", "Insert Auto", tree.insertAuto(N));
+                if (N <= 100) {
+                    cout << GREEN << "ÐÐ’Ð› Ð´ÐµÑ€ÐµÐ²Ð¾:" << '\n' << '\n' << RESET;
+                    tree.printPretty(tree.getRoot(), cout);
+                }
+                else cout << GREEN << "ÐÐ’Ð› Ð´ÐµÑ€ÐµÐ²Ð¾ ÑƒÑÐ¿ÐµÑˆÐ½Ð¾ ÑÐ¾Ð·Ð´Ð°Ð½Ð¾ Ñ " << N << " ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ð°Ð¼Ð¸" << '\n' << RESET;
 
-                tree.printPretty(tree.getRoot(), cout);
                 pause();
                 clear();
                 break;
@@ -375,12 +363,12 @@ void createTree(Logis& log) {
         {
             clear();
             if (!tree.getRoot()) {
-                cout<< RED << "Äâîè÷íîå äåðåâî ïîèñêà îòñóòñòâóåò" << '\n' << RESET;
+                cout<< RED << "Ð”Ð²Ð¾Ð¸Ñ‡Ð½Ð¾Ðµ Ð´ÐµÑ€ÐµÐ²Ð¾ Ð¿Ð¾Ð¸ÑÐºÐ° Ð¾Ñ‚ÑÑƒÑ‚ÑÑ‚Ð²ÑƒÐµÑ‚" << '\n' << RESET;
                 pause();
                 clear();
                 break;
             }
-            cout << GREEN << "Äâîè÷íîå äåðåâî ïîèñêà:" << '\n' << '\n' << RESET;
+            cout << GREEN << "Ð”Ð²Ð¾Ð¸Ñ‡Ð½Ð¾Ðµ Ð´ÐµÑ€ÐµÐ²Ð¾ Ð¿Ð¾Ð¸ÑÐºÐ°:" << '\n' << '\n' << RESET;
             MEASURE("BST", "Print", tree.printPretty(tree.getRoot(), cout));
             
             pause();
@@ -392,26 +380,26 @@ void createTree(Logis& log) {
             int num;
             clear();
             if (!tree.getRoot()) {
-                cout << RED << "Äâîè÷íîå äåðåâî ïîèñêà îòñóòñòâóåò" << '\n' << RESET;
+                cout << RED << "Ð”Ð²Ð¾Ð¸Ñ‡Ð½Ð¾Ðµ Ð´ÐµÑ€ÐµÐ²Ð¾ Ð¿Ð¾Ð¸ÑÐºÐ° Ð¾Ñ‚ÑÑƒÑ‚ÑÑ‚Ð²ÑƒÐµÑ‚" << '\n' << RESET;
                 pause();
                 clear();
                 break;
             }
             cout << "BST:" << '\n';
             tree.printPretty(tree.getRoot(), cout);
-            cout << "Ââåäèòå ÷èñëî êîòîðîå íåîáõîäèìî íàéòè: " << '\n';
+            cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ñ‡Ð¸ÑÐ»Ð¾ ÐºÐ¾Ñ‚Ð¾Ñ€Ð¾Ðµ Ð½ÐµÐ¾Ð±Ñ…Ð¾Ð´Ð¸Ð¼Ð¾ Ð½Ð°Ð¹Ñ‚Ð¸: " << '\n';
             cin >> num;
 			MEASURE("BST", "Search", tree.search(num));
             if (tree.search(num)) {
                 clear();
-                cout << GREEN << "Ýëåìåíò íàéäåí" << '\n' << RESET;
+                cout << GREEN << "Ð­Ð»ÐµÐ¼ÐµÐ½Ñ‚ Ð½Ð°Ð¹Ð´ÐµÐ½" << '\n' << RESET;
                 pause();
                 clear();
                 break;
             }
             else {
                 clear();
-                cout << RED << "Òàêîé ýëåìåíò îòñóòñòâóåò!!!" << '\n' << RESET;
+                cout << RED << "Ð¢Ð°ÐºÐ¾Ð¹ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚ Ð¾Ñ‚ÑÑƒÑ‚ÑÑ‚Ð²ÑƒÐµÑ‚!!!" << '\n' << RESET;
                 pause();
                 clear();
                 break;
@@ -422,24 +410,24 @@ void createTree(Logis& log) {
             int num;
             clear();
             if (!tree.getRoot()) {
-                cout << RED << "Äâîè÷íîå äåðåâî ïîèñêà îòñóòñòâóåò" << '\n' << RESET;
+                cout << RED << "Ð”Ð²Ð¾Ð¸Ñ‡Ð½Ð¾Ðµ Ð´ÐµÑ€ÐµÐ²Ð¾ Ð¿Ð¾Ð¸ÑÐºÐ° Ð¾Ñ‚ÑÑƒÑ‚ÑÑ‚Ð²ÑƒÐµÑ‚" << '\n' << RESET;
                 pause();
                 clear();
                 break;
             }
-            cout << "BST Äî óäàëåíèÿ:" << '\n';
+            cout << "BST Ð”Ð¾ ÑƒÐ´Ð°Ð»ÐµÐ½Ð¸Ñ:" << '\n';
             tree.printPretty(tree.getRoot(), cout);
-            cout << "Ââåäèòå ÷èñëî êîòîðîå íåîáõîäèìî óäàëèòü: " << '\n';
+            cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ñ‡Ð¸ÑÐ»Ð¾ ÐºÐ¾Ñ‚Ð¾Ñ€Ð¾Ðµ Ð½ÐµÐ¾Ð±Ñ…Ð¾Ð´Ð¸Ð¼Ð¾ ÑƒÐ´Ð°Ð»Ð¸Ñ‚ÑŒ: " << '\n';
             cin >> num;
             if (!tree.search(num)) {
                 clear();
-                cout << RED << "Òàêîé ýëåìåíò îòñóòñòâóåò!!!" << '\n' << RESET;
+                cout << RED << "Ð¢Ð°ÐºÐ¾Ð¹ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚ Ð¾Ñ‚ÑÑƒÑ‚ÑÑ‚Ð²ÑƒÐµÑ‚!!!" << '\n' << RESET;
                 pause();
                 clear();
                 break;
             }
             MEASURE("BST", "Delete", tree.deleteElement(num));
-            cout << "BST Ïîñëå óäàëåíèÿ:" << '\n';
+            cout << "BST ÐŸÐ¾ÑÐ»Ðµ ÑƒÐ´Ð°Ð»ÐµÐ½Ð¸Ñ:" << '\n';
             tree.printPretty(tree.getRoot(), cout);
             pause();
             clear();
@@ -449,18 +437,18 @@ void createTree(Logis& log) {
         {
 			clear();
             if (!tree.getRoot()) {
-                cout << RED << "Äâîè÷íîå äåðåâî ïîèñêà îòñóòñòâóåò" << '\n' << RESET;
+                cout << RED << "Ð”Ð²Ð¾Ð¸Ñ‡Ð½Ð¾Ðµ Ð´ÐµÑ€ÐµÐ²Ð¾ Ð¿Ð¾Ð¸ÑÐºÐ° Ð¾Ñ‚ÑÑƒÑ‚ÑÑ‚Ð²ÑƒÐµÑ‚" << '\n' << RESET;
                 pause();
                 clear();
                 break;
             }
-			cout << "Ïðÿìîé îáõîä: " << '\n';
+			cout << "ÐŸÑ€ÑÐ¼Ð¾Ð¹ Ð¾Ð±Ñ…Ð¾Ð´: " << '\n';
             MEASURE("BST", "PreOrder", tree.preOrder());
-            cout << "\nÑèììåòðè÷íûé îáõîä: " << '\n';
+            cout << "\nÐ¡Ð¸Ð¼Ð¼ÐµÑ‚Ñ€Ð¸Ñ‡Ð½Ñ‹Ð¹ Ð¾Ð±Ñ…Ð¾Ð´: " << '\n';
             MEASURE("BST", "InOrder", tree.inOrder());
-            cout << "\nÎáðàòíûé îáõîä: " << '\n';
+            cout << "\nÐžÐ±Ñ€Ð°Ñ‚Ð½Ñ‹Ð¹ Ð¾Ð±Ñ…Ð¾Ð´: " << '\n';
             MEASURE("BST", "PostOrder", tree.postOrder());
-            cout << "\nÏîñòðî÷íûé îáõîä: " << '\n';
+            cout << "\nÐŸÐ¾ÑÑ‚Ñ€Ð¾Ñ‡Ð½Ñ‹Ð¹ Ð¾Ð±Ñ…Ð¾Ð´: " << '\n';
             MEASURE("BST", "LevelOrder", tree.levelOrder());
             cout << '\n' << "-------------------------------------" << '\n';
 			tree.printPretty(tree.getRoot(), cout);
