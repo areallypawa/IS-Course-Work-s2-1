@@ -2,17 +2,8 @@
 
 using namespace std;
 
-/* 
-    SERVICE CODE 
-*/
-
 static int currentItems = 0;
 static int currentChoose = 0;
-
-
-/*
-    SERVICE CODE
-*/
 
 BST::Node::Node(int value) : value(value), left(nullptr), right(nullptr) {
 }
@@ -301,7 +292,26 @@ void createTreeBst(Logis& log) {
         case 0:
         {
             int N;
-			tree.clear();
+            int currentClear = 0;
+            string a[2] = { "Да", "Нет" };
+            if (tree.getRoot()) {
+                clear();
+                while (true) {
+                    show_menu(currentClear, 2, a, "Перезаписать дерево?");
+                    int key = _getch();
+
+                    if (key == 72 && currentClear > 0) currentClear--;
+                    if (key == 80 && currentClear < 2 - 1) currentClear++;
+                    if (key == 13) break;
+                }
+                switch (currentClear) {
+                case 0:
+                {
+                    tree.clear();
+                    break;
+                }
+                }
+            }
             clear();
             while (true) {
                 show_menu(currentChoose, coutChooseItems, ChooseItems, "Выбор функции");
@@ -318,8 +328,12 @@ void createTreeBst(Logis& log) {
                 cin >> N;
 
                 MEASURE("BST", "Insert Auto", tree.insertAuto(N));
+                if (N <= 100) {
+                    cout << GREEN << "АВЛ дерево:" << '\n' << '\n' << RESET;
+                    tree.printPretty(tree.getRoot(), cout);
+                }
+                else cout << GREEN << "АВЛ дерево успешно создано с " << N << " элементами" << '\n' << RESET;
 
-                tree.printPretty(tree.getRoot(), cout);
                 pause();
                 clear();
                 break;

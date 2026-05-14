@@ -24,10 +24,7 @@ private:
 	void printPretty(Node* node, trunk* prev, bool isLeft, std::ostream& out);
 	Node* deleteNode(Node* node, int value);
 	Node* insertA(Node* node, int value);
-	void inOrder(Node* node);
-	void preOrder(Node* node);
-	void postOrder(Node* node);
-	void levelOrder(Node* node);
+
 	void deleteTree(Node* node);
 	void addLeft(Node* parent, int value);
 	void addRight(Node* parent, int value);
@@ -36,26 +33,26 @@ private:
 	int getBalance(Node* node);
 	void swap(Node* a, Node* b);
 	
-	Node* AVL::rotateRight(Node* y);
-	Node* AVL::rotateLeft(Node* x);
-	void AVL::balance(Node* node);
+	Node* rotateRight(Node* y);
+	Node* rotateLeft(Node* x);
+	void balance(Node* node);
 public:
 	AVL();
 	void clear();
 	~AVL();
 	void setRoot(int value);
 	Node* getRoot();
-	void insertWrapp(int value);
 	void insertAuto(int N);
 	void insertFromInput();
 	void insertFromFile(const std::string& filename);
 	void deleteElement(int value);
 	bool search(int value);
 	
-	void inOrder();
-	void preOrder();
-	void postOrder();
-	void levelOrder();
+	void inOrder(Node* node);
+	void preOrder(Node* node);
+	void postOrder(Node* node);
+	void levelOrder(Node* node);
+
 	void print();
 	void printPretty(Node* root, std::ostream& out = std::cout);
 	

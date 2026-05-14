@@ -47,7 +47,9 @@ int main()
         }
         case 3:
         {
-			//Red-Black
+            clear();
+            createTreeRb(log);
+            clear();
             break;
         }
         case 4:

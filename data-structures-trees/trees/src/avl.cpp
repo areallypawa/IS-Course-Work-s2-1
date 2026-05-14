@@ -2,16 +2,8 @@
 
 using namespace std;
 
-/*
-    SERVICE CODE
-*/
-
 static int currentItems = 0;
 static int currentChoose = 0;
-
-/*
-    SERVICE CODE
-*/
 
 AVL::Node::Node(int value) : value(value), left(nullptr), right(nullptr), height(0) {
 }
@@ -149,7 +141,8 @@ void AVL::insert(int value) {
 
 void AVL::insertAuto(int N) {
     for (int i = 0; i < N; ++i) {
-        insert(rand() % 199 - 99);
+        insert(rand() % 199999 - 99999);
+        // insert(rand() % 199 - 99);
     }
 }
 
@@ -268,22 +261,6 @@ void AVL::levelOrder(Node* node) {
     }
 }
 
-void AVL::inOrder() {
-    inOrder(root);
-}
-
-void AVL::preOrder() {
-    preOrder(root);
-}
-
-void AVL::postOrder() {
-    postOrder(root);
-}
-
-void AVL::levelOrder() {
-    levelOrder(root);
-}
-
 void AVL::insertFromFile(const string& filename) {
     ifstream file(filename);
 
@@ -378,8 +355,29 @@ void createTreeAvl(Logis& log) {
         case 0:
         {
             int N;
-            tree.clear();
+            int currentClear = 0;
+            string a[2] = { "Да", "Нет" };
+            if (tree.getRoot()) {
+				clear();
+                while (true) {
+                    show_menu(currentClear, 2, a, "Перезаписать дерево?");
+                    int key = _getch();
+
+                    if (key == 72 && currentClear > 0) currentClear--;
+                    if (key == 80 && currentClear < 2 - 1) currentClear++;
+                    if (key == 13) break;
+                }
+                switch (currentClear) {
+                    case 0:
+                    {
+                        tree.clear();
+						break;
+                    }
+                }
+			}
+            
             clear();
+            
             while (true) {
                 show_menu(currentChoose, coutChooseItems, ChooseItems, "Выбор функции");
                 int key = _getch();
@@ -395,8 +393,12 @@ void createTreeAvl(Logis& log) {
                 cin >> N;
 
                 MEASURE("AVL", "Insert Auto", tree.insertAuto(N));
+                if (N <= 100) {
+                    cout << GREEN << "АВЛ дерево:" << '\n' << '\n' << RESET;
+                    tree.printPretty(tree.getRoot(), cout);
+				}
+				else cout << GREEN << "АВЛ дерево успешно создано с " << N << " элементами" << '\n' << RESET;
 
-                tree.printPretty(tree.getRoot(), cout);
                 pause();
                 clear();
                 break;
@@ -443,7 +445,7 @@ void createTreeAvl(Logis& log) {
             int num;
             clear();
             if (!tree.getRoot()) {
-                cout << RED << "АВЛ дерево" << '\n' << RESET;
+                cout << RED << "АВЛ дерево отсутствует" << '\n' << RESET;
                 pause();
                 clear();
                 break;
@@ -506,13 +508,13 @@ void createTreeAvl(Logis& log) {
                 break;
             }
             cout << "Прямой обход: " << '\n';
-            MEASURE("AVL", "PreOrder", tree.preOrder());
+            MEASURE("AVL", "PreOrder", tree.preOrder(tree.getRoot()));
             cout << "\nСимметричный обход: " << '\n';
-            MEASURE("AVL", "InOrder", tree.inOrder());
+            MEASURE("AVL", "InOrder", tree.inOrder(tree.getRoot()));
             cout << "\nОбратный обход: " << '\n';
-            MEASURE("AVL", "PostOrder", tree.postOrder());
+            MEASURE("AVL", "PostOrder", tree.postOrder(tree.getRoot()));
             cout << "\nПострочный обход: " << '\n';
-            MEASURE("AVL", "LevelOrder", tree.levelOrder());
+            MEASURE("AVL", "LevelOrder", tree.levelOrder(tree.getRoot()));
             cout << '\n' << "-------------------------------------" << '\n';
             tree.printPretty(tree.getRoot(), cout);
             pause();
