@@ -37,16 +37,6 @@ BST::Node* BST::getRoot() {
     return root;
 }
 
-void BST::addLeft(Node* parent, int value) {
-    if (parent)
-        parent->left = new Node(value);
-}
-
-void BST::addRight(Node* parent, int value) {
-    if (parent)
-        parent->right = new Node(value);
-}
-
 void BST::print(Node* node) {
     if (!node) return;
 
@@ -59,36 +49,46 @@ void BST::print() {
     print(root);
 }
 
-void BST::printPretty(Node* node, trunk* prev, bool isLeft, ostream& out) {
-    if (!node) return;
+void BST::printPretty(Node* root, trunk* prev, bool isLeft, ostream& out)
+{
+    if (root == nullptr)
+        return;
 
     string prev_str = "    ";
-    trunk tmp(prev, prev_str);
+    trunk* trunki = new trunk(prev, prev_str);
 
-    printPretty(node->right, &tmp, false, out);
+    // Правое поддерево
+    printPretty(root->right, trunki, true, out);
 
-    if (!prev) {
-        tmp.str = "--> ";
+    if (!prev)
+    {
+        trunki->str = "--";
     }
-    else if (isLeft) {
-        tmp.str = "`--> ";
+    else if (isLeft)
+    {
+        trunki->str = ".--";
         prev_str = "   |";
     }
-    else {
-        tmp.str = ".--> ";
+    else
+    {
+        trunki->str = "`--";
         prev->str = prev_str;
     }
 
-    int count = 0;
-    showTrunk(&tmp, out);
-    out << node->value << '\n';
+    showTrunk(trunki, out);
+    out << root->value << endl;
 
-    if (prev) {
+    if (prev)
         prev->str = prev_str;
-    }
-    tmp.str = "   |";
-    printPretty(node->left, &tmp, true, out);
+
+    trunki->str = "   |";
+
+    // Левое поддерево
+    printPretty(root->left, trunki, false, out);
+
+    delete trunki;
 }
+
 
 void BST::printPretty(Node* root, ostream& out) {
     printPretty(root, nullptr, false, out);
@@ -127,7 +127,7 @@ void BST::insertFromInput() {
 
     stringstream ss(line);
     int value;
-
+    
     while (ss >> value) {
         this->insert(value);
     }
@@ -189,9 +189,24 @@ bool BST::search(int value) {
     return false;
 }
 
+/*
 void BST::insertAuto(int N) {
     for (int i = 0; i < N; ++i) {
-        insert(rand() % 199 - 99);
+        //insert(rand() % 199 - 99);
+    }
+}
+*/
+
+void BST::insertAuto(int N)
+{
+    random_device rd;
+    mt19937 gen(rd());
+
+    uniform_int_distribution<int> dist(-1000000000, 1000000000);
+
+    for (int i = 0; i < N; i++)
+    {
+        insert(dist(gen));
     }
 }
 
@@ -274,10 +289,23 @@ void BST::insertFromFile(const string& filename) {
     file.close();
 }
 
+int BST::height(Node* node)
+{
+    if (!node)
+        return 0;
+
+    int leftHeight = height(node->left);
+    int rightHeight = height(node->right);
+
+    return max(leftHeight, rightHeight) + 1;
+}
+
 void createTreeBst(Logis& log) {
     BST tree;
-    currentItems = 0;
-    currentChoose = 0;
+	currentChoose = 0;
+	currentItems = 0;
+
+    bool isBigNum = false;
     do {
         while (true) {
             show_menu(currentItems, countItems, items, "МЕНЮ");
@@ -329,11 +357,14 @@ void createTreeBst(Logis& log) {
 
                 MEASURE("BST", "Insert Auto", tree.insertAuto(N));
                 if (N <= 100) {
-                    cout << GREEN << "АВЛ дерево:" << '\n' << '\n' << RESET;
+                    isBigNum = false;
+                    cout << GREEN << "BST дерево:" << '\n' << '\n' << RESET;
                     tree.printPretty(tree.getRoot(), cout);
                 }
-                else cout << GREEN << "АВЛ дерево успешно создано с " << N << " элементами" << '\n' << RESET;
-
+                else {
+                    cout << GREEN << "BST дерево успешно создано с " << N << " элементами" << '\n' << RESET;
+                    isBigNum = true;
+                }
                 pause();
                 clear();
                 break;
@@ -342,7 +373,7 @@ void createTreeBst(Logis& log) {
             {
                 MEASURE("BST", "Insert From Input", tree.insertFromInput());
 
-                tree.printPretty(tree.getRoot(), cout);
+                cout << GREEN << "BST дерево успешно создано" << RESET;
                 pause();
                 clear();
                 break;
@@ -351,7 +382,7 @@ void createTreeBst(Logis& log) {
             {
 				MEASURE("BST", "Insert From File", tree.insertFromFile("data/input.txt"));
 
-				tree.printPretty(tree.getRoot(), cout);
+                cout << GREEN << "BST дерево успешно создано" << RESET;
                 pause();
 				clear();
                 break;
@@ -363,14 +394,18 @@ void createTreeBst(Logis& log) {
         {
             clear();
             if (!tree.getRoot()) {
-                cout<< RED << "Двоичное дерево поиска отсутствует" << '\n' << RESET;
+                cout<< RED << "BST отсутствует" << '\n' << RESET;
                 pause();
                 clear();
                 break;
             }
-            cout << GREEN << "Двоичное дерево поиска:" << '\n' << '\n' << RESET;
-            MEASURE("BST", "Print", tree.printPretty(tree.getRoot(), cout));
-            
+            if (!isBigNum) {
+                cout << GREEN << "BST дерево:" << '\n' << '\n' << RESET;
+                tree.printPretty(tree.getRoot(), cout);
+            }
+            else {
+                cout << GREEN << "Высота дерева: " << tree.height(tree.getRoot()) << '\n' << RESET;
+            }
             pause();
             clear();
             break;
@@ -385,8 +420,13 @@ void createTreeBst(Logis& log) {
                 clear();
                 break;
             }
-            cout << "BST:" << '\n';
-            tree.printPretty(tree.getRoot(), cout);
+            if (!isBigNum) {
+                cout << GREEN << "BST дерево:" << '\n' << '\n' << RESET;
+                tree.printPretty(tree.getRoot(), cout);
+            }
+            else {
+                cout << GREEN << "Высота дерева: " << tree.height(tree.getRoot()) << '\n' << RESET;
+            }
             cout << "Введите число которое необходимо найти: " << '\n';
             cin >> num;
 			MEASURE("BST", "Search", tree.search(num));
@@ -415,8 +455,13 @@ void createTreeBst(Logis& log) {
                 clear();
                 break;
             }
-            cout << "BST До удаления:" << '\n';
-            tree.printPretty(tree.getRoot(), cout);
+            if (!isBigNum) {
+                cout << GREEN << "BST дерево до удаления:" << '\n' << '\n' << RESET;
+                tree.printPretty(tree.getRoot(), cout);
+            }
+            else {
+                cout << GREEN << "Высота дерева до удаления: " << tree.height(tree.getRoot()) << '\n' << RESET;
+            }
             cout << "Введите число которое необходимо удалить: " << '\n';
             cin >> num;
             if (!tree.search(num)) {
@@ -427,8 +472,13 @@ void createTreeBst(Logis& log) {
                 break;
             }
             MEASURE("BST", "Delete", tree.deleteElement(num));
-            cout << "BST После удаления:" << '\n';
-            tree.printPretty(tree.getRoot(), cout);
+            if (!isBigNum) {
+                cout << GREEN << "BST дерево после удаления:" << '\n' << '\n' << RESET;
+                tree.printPretty(tree.getRoot(), cout);
+            }
+            else {
+                cout << GREEN << "Высота дерева после удаления: " << tree.height(tree.getRoot()) << '\n' << RESET;
+            }
             pause();
             clear();
             break;
@@ -451,7 +501,6 @@ void createTreeBst(Logis& log) {
             cout << "\nПострочный обход: " << '\n';
             MEASURE("BST", "LevelOrder", tree.levelOrder());
             cout << '\n' << "-------------------------------------" << '\n';
-			tree.printPretty(tree.getRoot(), cout);
             pause();
 			clear();
 

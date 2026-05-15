@@ -1,63 +1,84 @@
 #pragma once
 #include <iostream>
-#include <iterator>
-#include <string>
-#include <conio.h>
 #include <sstream>
 #include <fstream>
+#include <queue>
 #include <random>
+#include <chrono>
+#include <conio.h>
+
 #include "menu.h"
 
 class RedBlack
 {
 private:
-	struct Node
-	{
-		int value;
-		Node* left;
-		Node* right;
-		int height;
-		Node(int value);
-	};
-	Node* root;
-	void print(Node* node);
-	void printPretty(Node* node, trunk* prev, bool isLeft, std::ostream& out);
-	Node* deleteNode(Node* node, int value);
-	Node* insertA(Node* node, int value);
 
-	void deleteTree(Node* node);
-	void addLeft(Node* parent, int value);
-	void addRight(Node* parent, int value);
-	Node* findMin(Node* node);
-	int getHeight(Node* node);
-	int getBalance(Node* node);
-	void swap(Node* a, Node* b);
+    enum Color
+    {
+        REDs,
+        BLACK
+    };
 
-	Node* rotateRight(Node* y);
-	Node* rotateLeft(Node* x);
-	void balance(Node* node);
+    struct Node
+    {
+        int value;
+
+        Color color;
+
+        Node* left;
+        Node* right;
+        Node* parent;
+
+        Node(int value);
+    };
+
+    Node* root;
+
+private:
+
+    void deleteTree(Node* node);
+    void rotateLeft(Node* x);
+    void rotateRight(Node* y);
+    void fixInsert(Node* node);
+    void insertNode(int value);
+    bool search(Node* node, int value);
+    bool checkRedBlack(Node* node);
+
+    Node* findMin(Node* node);
+
+    void print(Node* node);
+    void printPretty(Node* node,
+        trunk* prev,
+        bool isLeft,
+        std::ostream& out);
+
 public:
-	RedBlack();
-	void clear();
-	~RedBlack();
-	void setRoot(int value);
-	Node* getRoot();
-	void insertAuto(int N);
-	void insertFromInput();
-	void insertFromFile(const std::string& filename);
-	void deleteElement(int value);
-	bool search(int value);
+    RedBlack();
+    ~RedBlack();
+    void clear();
+    bool empty();
 
-	void inOrder(Node* node);
-	void preOrder(Node* node);
-	void postOrder(Node* node);
-	void levelOrder(Node* node);
+    void setRoot(int value);
+    Node* getRoot();
 
-	void print();
-	void printPretty(Node* root, std::ostream& out = std::cout);
+    void insert(int value);
+    void insertAuto(int N);
+    void insertFromInput();
+    void insertFromFile(const std::string& filename);
+    void deleteElement(int value);
+    bool search(int value);
+    void checkBalance();
+    void transplant(Node* u, Node* v);
+    void inOrder(Node* node);
+    void preOrder(Node* node);
+    void postOrder(Node* node);
+    void levelOrder(Node* node);
+    void print();
+    int height(Node* node);
+    void printPretty(Node* root,
+        std::ostream& out = std::cout);
 
-	void insert(int value);
-	void updateHeight(Node* node);
+    void fixDelete(Node* x, Node* parent);
 };
 
 void showTrunk(trunk* p, std::ostream& out);

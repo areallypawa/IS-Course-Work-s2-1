@@ -8,13 +8,6 @@
 #include <random>
 #include "menu.h"
 
-/*
-	Не реализовано:
-	- В отчете сравните скорость работы бинарного дерева с линейной структурой (двусвязным списком или динамическим массивом) и сделайте выводы.
-	Остался только пункт с линейной структурой, так как в процессе реализации было принято решение не реализовывать двусвязный список, а использовать динамический массив (std::vector) для сравнения.
-*/
-
-
 class BST
 {
 private:
@@ -46,8 +39,6 @@ public:
 	void setRoot(int value);
 	Node *getRoot();
 
-	void addLeft(Node *parent, int value);
-	void addRight(Node *parent, int value);
 	void insert(int value);
 	void insertAuto(int N);
 	void insertFromInput();
@@ -57,7 +48,8 @@ public:
 	void deleteElement(int value);
 	void print();
 	void printPretty(Node *root, std::ostream &out);
-
+	int height(Node* node);
+	
 	void inOrder();
 	void preOrder();
 	void postOrder();
