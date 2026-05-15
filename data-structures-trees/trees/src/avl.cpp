@@ -37,16 +37,6 @@ AVL::Node* AVL::getRoot() {
     return root;
 }
 
-void AVL::addLeft(Node* parent, int value) {
-    if (parent)
-        parent->left = new Node(value);
-}
-
-void AVL::addRight(Node* parent, int value) {
-    if (parent)
-        parent->right = new Node(value);
-}
-
 void AVL::print(Node* node) {
     if (!node) return;
 
@@ -59,35 +49,44 @@ void AVL::print() {
     print(root);
 }
 
-void AVL::printPretty(Node* node, trunk* prev, bool isLeft, ostream& out) {
-    if (!node) return;
+void AVL::printPretty(Node* root, trunk* prev, bool isLeft, ostream& out)
+{
+    if (root == nullptr)
+        return;
 
     string prev_str = "    ";
-    trunk tmp(prev, prev_str);
+    trunk* trunki = new trunk(prev, prev_str);
 
-    printPretty(node->right, &tmp, false, out);
+    // Правое поддерево
+    printPretty(root->right, trunki, true, out);
 
-    if (!prev) {
-        tmp.str = "--> ";
+    if (!prev)
+    {
+        trunki->str = "--";
     }
-    else if (isLeft) {
-        tmp.str = "`--> ";
+    else if (isLeft)
+    {
+        trunki->str = ".--";
         prev_str = "   |";
     }
-    else {
-        tmp.str = ".--> ";
+    else
+    {
+        trunki->str = "`--";
         prev->str = prev_str;
     }
 
-    int count = 0;
-    showTrunk(&tmp, out);
-    out << node->value << '\n';
+    showTrunk(trunki, out);
+    out << root->value << endl;
 
-    if (prev) {
+    if (prev)
         prev->str = prev_str;
-    }
-    tmp.str = "   |";
-    printPretty(node->left, &tmp, true, out);
+
+    trunki->str = "   |";
+
+    // Левое поддерево
+    printPretty(root->left, trunki, false, out);
+
+    delete trunki;
 }
 
 void AVL::printPretty(Node* root, ostream& out) {
@@ -139,10 +138,16 @@ void AVL::insert(int value) {
     root = insertA(root, value);
 }
 
-void AVL::insertAuto(int N) {
-    for (int i = 0; i < N; ++i) {
-        insert(rand() % 199999 - 99999);
-        // insert(rand() % 199 - 99);
+void AVL::insertAuto(int N)
+{
+    random_device rd;
+    mt19937 gen(rd());
+
+    uniform_int_distribution<int> dist(-1000000000, 1000000000);
+
+    for (int i = 0; i < N; i++)
+    {
+        insert(dist(gen));
     }
 }
 
@@ -339,8 +344,11 @@ void AVL::balance(Node *node) {
 
 void createTreeAvl(Logis& log) {
     AVL tree;
-    currentItems = 0;
     currentChoose = 0;
+    currentItems = 0;
+
+    bool isBigNum = false;
+    
     do {
         while (true) {
             show_menu(currentItems, countItems, items, "МЕНЮ");
@@ -394,11 +402,14 @@ void createTreeAvl(Logis& log) {
 
                 MEASURE("AVL", "Insert Auto", tree.insertAuto(N));
                 if (N <= 100) {
-                    cout << GREEN << "АВЛ дерево:" << '\n' << '\n' << RESET;
+                    isBigNum = false;
+                    cout << GREEN << "AVL дерево:" << '\n' << '\n' << RESET;
                     tree.printPretty(tree.getRoot(), cout);
-				}
-				else cout << GREEN << "АВЛ дерево успешно создано с " << N << " элементами" << '\n' << RESET;
-
+                }
+                else {
+                    cout << GREEN << "AVL дерево успешно создано с " << N << " элементами" << '\n' << RESET;
+                    isBigNum = true;
+                }
                 pause();
                 clear();
                 break;
@@ -407,7 +418,7 @@ void createTreeAvl(Logis& log) {
             {
                 MEASURE("AVL", "Insert From Input", tree.insertFromInput());
 
-                tree.printPretty(tree.getRoot(), cout);
+                cout << GREEN << "AVL дерево успешно создано" << RESET;
                 pause();
                 clear();
                 break;
@@ -416,7 +427,7 @@ void createTreeAvl(Logis& log) {
             {
                 MEASURE("AVL", "Insert From File", tree.insertFromFile("data/input.txt"));
 
-                tree.printPretty(tree.getRoot(), cout);
+                cout << GREEN << "AVL дерево успешно создано" << RESET;
                 pause();
                 clear();
                 break;
@@ -428,13 +439,21 @@ void createTreeAvl(Logis& log) {
         {
             clear();
             if (!tree.getRoot()) {
-                cout << RED << "АВЛ дерево отсутствует" << '\n' << RESET;
+                cout << RED << "AVL дерево отсутствует" << '\n' << RESET;
                 pause();
                 clear();
                 break;
             }
-            cout << GREEN << "АВЛ дерево:" << '\n' << '\n' << RESET;
-            MEASURE("AVL", "Print", tree.printPretty(tree.getRoot(), cout));
+            if (!isBigNum)
+            {
+                cout << GREEN << "AVL дерево:" << '\n' << '\n' << RESET;
+                MEASURE("RedBlack", "Print", tree.printPretty(tree.getRoot(), cout));
+            }
+            else
+            {
+                cout << GREEN << "Высота дерева: " << tree.getRoot()->height << RESET << '\n';
+                
+            }
 
             pause();
             clear();
@@ -450,8 +469,16 @@ void createTreeAvl(Logis& log) {
                 clear();
                 break;
             }
-            cout << "AVL:" << '\n';
-            tree.printPretty(tree.getRoot(), cout);
+            if (!isBigNum)
+            {
+                cout << GREEN << "AVL дерево:" << '\n' << '\n' << RESET;
+                MEASURE("RedBlack", "Print", tree.printPretty(tree.getRoot(), cout));
+            }
+            else
+            {
+                cout << GREEN << "Высота дерева: " << tree.getRoot()->height << RESET << '\n';
+
+            }
             cout << "Введите число которое необходимо найти: " << '\n';
             cin >> num;
             MEASURE("AVL", "Search", tree.search(num));
@@ -480,8 +507,16 @@ void createTreeAvl(Logis& log) {
                 clear();
                 break;
             }
-            cout << "AVL До удаления:" << '\n';
-            tree.printPretty(tree.getRoot(), cout);
+            if (!isBigNum)
+            {
+                cout << GREEN << "AVL дерево до удаления:" << '\n' << '\n' << RESET;
+                MEASURE("RedBlack", "Print", tree.printPretty(tree.getRoot(), cout));
+            }
+            else
+            {
+                cout << GREEN << "Высота дерева до удаления: " << tree.getRoot()->height << RESET << '\n';
+
+            }
             cout << "Введите число которое необходимо удалить: " << '\n';
             cin >> num;
             if (!tree.search(num)) {
@@ -492,8 +527,16 @@ void createTreeAvl(Logis& log) {
                 break;
             }
             MEASURE("AVL", "Delete", tree.deleteElement(num));
-            cout << "AVL После удаления:" << '\n';
-            tree.printPretty(tree.getRoot(), cout);
+            if (!isBigNum)
+            {
+                cout << GREEN << "AVL дерево после удаления:" << '\n' << '\n' << RESET;
+                MEASURE("RedBlack", "Print", tree.printPretty(tree.getRoot(), cout));
+            }
+            else
+            {
+                cout << GREEN << "Высота дерева после удаления: " << tree.getRoot()->height << RESET << '\n';
+
+            }
             pause();
             clear();
             break;
@@ -516,7 +559,6 @@ void createTreeAvl(Logis& log) {
             cout << "\nПострочный обход: " << '\n';
             MEASURE("AVL", "LevelOrder", tree.levelOrder(tree.getRoot()));
             cout << '\n' << "-------------------------------------" << '\n';
-            tree.printPretty(tree.getRoot(), cout);
             pause();
             clear();
 

@@ -5,11 +5,25 @@ using namespace std;
 static int currentItems = 0;
 static int currentChoose = 0;
 
-RedBlack::Node::Node(int value) : value(value), left(nullptr), right(nullptr), height(0) {
+RedBlack::Node::Node(int value) : value(value), color(REDs), left(nullptr), right(nullptr), parent(nullptr) {
 }
 
-RedBlack::RedBlack() {
+
+RedBlack::RedBlack()
+{
     root = nullptr;
+}
+
+void RedBlack::clear()
+{
+    deleteTree(root);
+    root = nullptr;
+}
+
+
+RedBlack::~RedBlack()
+{
+    deleteTree(root);
 }
 
 void RedBlack::deleteTree(Node* node) {
@@ -20,133 +34,43 @@ void RedBlack::deleteTree(Node* node) {
     delete node;
 }
 
-void RedBlack::clear() {
-    deleteTree(root);
-    root = nullptr;
+bool RedBlack::empty()
+{
+    return root == nullptr;
 }
 
-RedBlack::~RedBlack() {
-    deleteTree(root);
-}
-
-void RedBlack::setRoot(int value) {
+void RedBlack::setRoot(int value)
+{
     root = new Node(value);
 }
 
-RedBlack::Node* RedBlack::getRoot() {
+RedBlack::Node* RedBlack::getRoot()
+{
     return root;
 }
 
-void RedBlack::addLeft(Node* parent, int value) {
-    if (parent)
-        parent->left = new Node(value);
-}
+// ---------------- INSERT ----------------
 
-void RedBlack::addRight(Node* parent, int value) {
-    if (parent)
-        parent->right = new Node(value);
-}
-
-void RedBlack::print(Node* node) {
-    if (!node) return;
-
-    cout << node->value << " ";
-    print(node->left);
-    print(node->right);
-}
-
-void RedBlack::print() {
-    print(root);
-}
-
-void RedBlack::printPretty(Node* node, trunk* prev, bool isLeft, ostream& out) {
-    if (!node) return;
-
-    string prev_str = "    ";
-    trunk tmp(prev, prev_str);
-
-    printPretty(node->right, &tmp, false, out);
-
-    if (!prev) {
-        tmp.str = "--> ";
-    }
-    else if (isLeft) {
-        tmp.str = "`--> ";
-        prev_str = "   |";
-    }
-    else {
-        tmp.str = ".--> ";
-        prev->str = prev_str;
-    }
-
-    int count = 0;
-    showTrunk(&tmp, out);
-    out << node->value << '\n';
-
-    if (prev) {
-        prev->str = prev_str;
-    }
-    tmp.str = "   |";
-    printPretty(node->left, &tmp, true, out);
-}
-
-void RedBlack::printPretty(Node* root, ostream& out) {
-    printPretty(root, nullptr, false, out);
-}
-
-RedBlack::Node* RedBlack::insertA(Node* node, int value)
+void RedBlack::insert(int value)
 {
-    if (!node)
-        return new Node(value);
+    insertNode(value);
+}
 
-    if (value < node->value)
-        node->left = insertA(node->left, value);
-    else if (value > node->value)
-        node->right = insertA(node->right, value);
-    else
-        return node;
+void RedBlack::insertAuto(int N)
+{
+    random_device rd;
+    mt19937 gen(rd());
 
-    updateHeight(node);
+    uniform_int_distribution<int> dist(-1000000000, 1000000000);
 
-    int balance = getBalance(node);
-
-    // Left Left
-    if (balance > 1 && value < node->left->value)
-        return rotateRight(node);
-
-    // Right Right
-    if (balance < -1 && value > node->right->value)
-        return rotateLeft(node);
-
-    // Left Right
-    if (balance > 1 && value > node->left->value)
+    for (int i = 0; i < N; i++)
     {
-        node->left = rotateLeft(node->left);
-        return rotateRight(node);
-    }
-
-    // Right Left
-    if (balance < -1 && value < node->right->value)
-    {
-        node->right = rotateRight(node->right);
-        return rotateLeft(node);
-    }
-
-    return node;
-}
-
-void RedBlack::insert(int value) {
-    root = insertA(root, value);
-}
-
-void RedBlack::insertAuto(int N) {
-    for (int i = 0; i < N; ++i) {
-        insert(rand() % 199999 - 99999);
-        // insert(rand() % 199 - 99);
+        insert(dist(gen));
     }
 }
 
-void RedBlack::insertFromInput() {
+void RedBlack::insertFromInput()
+{
     cout << "Введи числа: ";
 
     string line;
@@ -155,68 +79,478 @@ void RedBlack::insertFromInput() {
     stringstream ss(line);
     int value;
 
-    while (ss >> value) {
-        this->insert(value);
-    }
+    while (ss >> value)
+        insert(value);
 }
 
-RedBlack::Node* RedBlack::findMin(Node* node) {
+void RedBlack::insertFromFile(const string& filename)
+{
+    ifstream file(filename);
+
+    if (!file.is_open())
+    {
+        cout << "Ошибка файла\n";
+        return;
+    }
+
+    int value;
+    while (file >> value)
+        insert(value);
+}
+
+bool RedBlack::search(int value)
+{
+    return search(root, value);
+}
+
+bool RedBlack::search(Node* node, int value)
+{
+    if (!node) return false;
+
+    if (node->value == value) return true;
+
+    if (value < node->value)
+        return search(node->left, value);
+
+    return search(node->right, value);
+}
+
+void RedBlack::deleteElement(int value)
+{
+    Node* z = root;
+
+    while (z && z->value != value)
+        z = (value < z->value) ? z->left : z->right;
+
+    if (!z) return;
+
+    Node* y = z;
+    Node* x = nullptr;
+    Color yOriginalColor = y->color;
+
+    if (!z->left)
+    {
+        x = z->right;
+        transplant(z, z->right);
+    }
+    else if (!z->right)
+    {
+        x = z->left;
+        transplant(z, z->left);
+    }
+    else
+    {
+        y = findMin(z->right);
+        yOriginalColor = y->color;
+        x = y->right;
+
+        if (y->parent == z)
+        {
+            if (x) x->parent = y;
+        }
+        else
+        {
+            transplant(y, y->right);
+            y->right = z->right;
+            y->right->parent = y;
+        }
+
+        transplant(z, y);
+        y->left = z->left;
+        y->left->parent = y;
+        y->color = z->color;
+    }
+
+    delete z;
+
+    if (yOriginalColor == BLACK)
+        fixDelete(x, (x ? x->parent : nullptr));
+}
+
+void RedBlack::fixDelete(Node* x, Node* parent)
+{
+    while (x != root && (x == nullptr || x->color == BLACK))
+    {
+        if (x == (parent ? parent->left : nullptr))
+        {
+            Node* w = parent->right;
+
+            // CASE 1
+            if (w && w->color == REDs)
+            {
+                w->color = BLACK;
+                parent->color = REDs;
+                rotateLeft(parent);
+                w = parent->right;
+            }
+
+            // CASE 2
+            if ((!w->left || w->left->color == BLACK) &&
+                (!w->right || w->right->color == BLACK))
+            {
+                if (w) w->color = REDs;
+                x = parent;
+                parent = x ? x->parent : nullptr;
+            }
+            else
+            {
+                // CASE 3
+                if (!w->right || w->right->color == BLACK)
+                {
+                    if (w->left) w->left->color = BLACK;
+                    w->color = REDs;
+                    rotateRight(w);
+                    w = parent->right;
+                }
+
+                // CASE 4
+                if (w)
+                {
+                    w->color = parent->color;
+                    parent->color = BLACK;
+                    if (w->right) w->right->color = BLACK;
+                    rotateLeft(parent);
+                }
+
+                x = root;
+                break;
+            }
+        }
+        else
+        {
+            Node* w = parent->left;
+
+            // зеркальные CASE 1-4 (аналогично)
+            if (w && w->color == REDs)
+            {
+                w->color = BLACK;
+                parent->color = REDs;
+                rotateRight(parent);
+                w = parent->left;
+            }
+
+            if ((!w->right || w->right->color == BLACK) &&
+                (!w->left || w->left->color == BLACK))
+            {
+                if (w) w->color = REDs;
+                x = parent;
+                parent = x ? x->parent : nullptr;
+            }
+            else
+            {
+                if (!w->left || w->left->color == BLACK)
+                {
+                    if (w->right) w->right->color = BLACK;
+                    w->color = REDs;
+                    rotateLeft(w);
+                    w = parent->left;
+                }
+
+                if (w)
+                {
+                    w->color = parent->color;
+                    parent->color = BLACK;
+                    if (w->left) w->left->color = BLACK;
+                    rotateRight(parent);
+                }
+
+                x = root;
+                break;
+            }
+        }
+    }
+
+    if (x)
+        x->color = BLACK;
+}
+
+RedBlack::Node* RedBlack::findMin(Node* node)
+{
     while (node && node->left)
         node = node->left;
-    return node;
-}
-
-RedBlack::Node* RedBlack::deleteNode(Node* node, int value) {
-    if (!node) return nullptr;
-
-    if (value < node->value) {
-        node->left = deleteNode(node->left, value);
-    }
-    else if (value > node->value) {
-        node->right = deleteNode(node->right, value);
-    }
-    else {
-        if (!node->left) {
-            Node* temp = node->right;
-            delete node;
-            return temp;
-        }
-        else if (!node->right) {
-            Node* temp = node->left;
-            delete node;
-            return temp;
-        }
-
-        Node* temp = findMin(node->right);
-
-        node->value = temp->value;
-
-        node->right = deleteNode(node->right, temp->value);
-    }
 
     return node;
 }
 
-void RedBlack::deleteElement(int value) {
-    root = deleteNode(root, value);
+void RedBlack::checkBalance()
+{
+    if (!root)
+    {
+        cout << "Дерево пустое\n";
+        return;
+    }
+
+    if (checkRedBlack(root))
+        cout << "OK (RB свойства соблюдены)\n";
+    else
+        cout << "НАРУШЕНИЕ RB свойств\n";
 }
 
-bool RedBlack::search(int value) {
+bool RedBlack::checkRedBlack(Node* node)
+{
+    if (!node) return true;
+
+    if (node->color == REDs)
+    {
+        if ((node->left && node->left->color == REDs) ||
+            (node->right && node->right->color == REDs))
+            return false;
+    }
+
+    return checkRedBlack(node->left) &&
+        checkRedBlack(node->right);
+}
+
+void RedBlack::rotateLeft(Node* x)
+{
+    Node* y = x->right;
+
+    x->right = y->left;
+
+    if (y->left)
+        y->left->parent = x;
+
+    y->parent = x->parent;
+
+    if (!x->parent)
+        root = y;
+    else if (x == x->parent->left)
+        x->parent->left = y;
+    else
+        x->parent->right = y;
+
+    y->left = x;
+    x->parent = y;
+}
+
+void RedBlack::rotateRight(Node* y)
+{
+    Node* x = y->left;
+
+    y->left = x->right;
+
+    if (x->right)
+        x->right->parent = y;
+
+    x->parent = y->parent;
+
+    if (!y->parent)
+        root = x;
+    else if (y == y->parent->left)
+        y->parent->left = x;
+    else
+        y->parent->right = x;
+
+    x->right = y;
+    y->parent = x;
+}
+
+void RedBlack::insertNode(int value)
+{
+    Node* node = new Node(value);
+
+    Node* parent = nullptr;
     Node* current = root;
 
-    while (current) {
-        if (value == current->value)
-            return true;
-        else if (value < current->value)
+    while (current)
+    {
+        parent = current;
+
+        if (value < current->value)
             current = current->left;
-        else
+        else if (value > current->value)
             current = current->right;
+        else
+        {
+            delete node;
+            return;
+        }
     }
 
-    return false;
+    node->parent = parent;
+
+    if (!parent)
+        root = node;
+    else if (value < parent->value)
+        parent->left = node;
+    else
+        parent->right = node;
+
+    fixInsert(node);
 }
 
-void RedBlack::inOrder(Node* node) {
+int RedBlack::height(Node* node)
+{
+    if (!node)
+        return 0;
+
+    int leftHeight = height(node->left);
+    int rightHeight = height(node->right);
+
+    return max(leftHeight, rightHeight) + 1;
+}
+
+void RedBlack::printPretty(Node* root, trunk* prev, bool isLeft, ostream& out)
+{
+    if (root == nullptr)
+        return;
+
+    string prev_str = "    ";
+    trunk* trunki = new trunk(prev, prev_str);
+
+    // правое поддерево
+    printPretty(root->right, trunki, true, out);
+
+    if (!prev)
+    {
+        trunki->str = "--";
+    }
+    else if (isLeft)
+    {
+        trunki->str = ".--";
+        prev_str = "   |";
+    }
+    else
+    {
+        trunki->str = "`--";
+        prev->str = prev_str;
+    }
+
+    showTrunk(trunki, out);
+    
+
+    if (root->color == REDs)
+        out << RED << root->value << RESET << endl;
+    else
+        out << root->value << endl;
+
+    if (prev)
+        prev->str = prev_str;
+
+    trunki->str = "   |";
+
+    // левое поддерево
+    printPretty(root->left, trunki, false, out);
+
+    delete trunki;
+}
+
+void RedBlack::printPretty(Node* root, ostream& out)
+{
+    printPretty(root, nullptr, false, out);
+}
+
+void RedBlack::fixInsert(Node* node)
+{
+    while (node != root &&
+        node->parent &&
+        node->parent->color == REDs)
+    {
+        Node* parent = node->parent;
+        Node* grand = parent->parent;
+
+        if (!grand)
+            break;
+
+        // parent слева
+        if (parent == grand->left)
+        {
+            Node* uncle = grand->right;
+
+            // CASE 1 recolor
+            if (uncle && uncle->color == REDs)
+            {
+                parent->color = BLACK;
+                uncle->color = BLACK;
+                grand->color = REDs;
+
+                node = grand;
+            }
+            else
+            {
+                // CASE 2
+                if (node == parent->right)
+                {
+                    node = parent;
+                    rotateLeft(node);
+
+                    parent = node->parent;
+                    grand = parent->parent;
+                }
+
+                // CASE 3
+                parent->color = BLACK;
+                grand->color = REDs;
+
+                rotateRight(grand);
+            }
+        }
+        else
+        {
+            Node* uncle = grand->left;
+
+            if (uncle && uncle->color == REDs)
+            {
+                parent->color = BLACK;
+                uncle->color = BLACK;
+                grand->color = REDs;
+
+                node = grand;
+            }
+            else
+            {
+                // CASE 2
+                if (node == parent->left)
+                {
+                    node = parent;
+                    rotateRight(node);
+
+                    parent = node->parent;
+                    grand = parent->parent;
+                }
+
+                // CASE 3
+                parent->color = BLACK;
+                grand->color = REDs;
+
+                rotateLeft(grand);
+            }
+        }
+    }
+
+    root->color = BLACK;
+}
+
+
+void RedBlack::transplant(Node* u, Node* v)
+{
+    if (!u->parent)
+        root = v;
+    else if (u == u->parent->left)
+        u->parent->left = v;
+    else
+        u->parent->right = v;
+
+    if (v)
+        v->parent = u->parent;
+}
+
+void RedBlack::print()
+{
+    print(root);
+}
+
+void RedBlack::print(Node* node)
+{
+    if (!node) return;
+
+    cout << node->value << " ";
+    print(node->left);
+    print(node->right);
+}
+
+void RedBlack::inOrder(Node* node)
+{
     if (!node) return;
 
     inOrder(node->left);
@@ -224,7 +558,8 @@ void RedBlack::inOrder(Node* node) {
     inOrder(node->right);
 }
 
-void RedBlack::preOrder(Node* node) {
+void RedBlack::preOrder(Node* node)
+{
     if (!node) return;
 
     cout << node->value << " ";
@@ -232,7 +567,8 @@ void RedBlack::preOrder(Node* node) {
     preOrder(node->right);
 }
 
-void RedBlack::postOrder(Node* node) {
+void RedBlack::postOrder(Node* node)
+{
     if (!node) return;
 
     postOrder(node->left);
@@ -240,107 +576,31 @@ void RedBlack::postOrder(Node* node) {
     cout << node->value << " ";
 }
 
-#include <queue>
-void RedBlack::levelOrder(Node* node) {
+void RedBlack::levelOrder(Node* node)
+{
     if (!node) return;
 
     queue<Node*> q;
     q.push(node);
 
-    while (!q.empty()) {
-        Node* current = q.front();
+    while (!q.empty())
+    {
+        Node* cur = q.front();
         q.pop();
 
-        cout << current->value << " ";
+        cout << cur->value << " ";
 
-        if (current->left)
-            q.push(current->left);
-
-        if (current->right)
-            q.push(current->right);
-    }
-}
-
-void RedBlack::insertFromFile(const string& filename) {
-    ifstream file(filename);
-
-    if (!file.is_open()) {
-        clear();
-        cout << RED << "Ошибка открытия файла\n" << RESET;
-        return;
-    }
-
-    int value;
-
-    while (file >> value) {
-        insert(value);
-    }
-
-    file.close();
-}
-
-int RedBlack::getHeight(Node* node) {
-    return node ? node->height : -1;
-}
-
-void RedBlack::updateHeight(Node* node) {
-    if (node) {
-        node->height = 1 + max(getHeight(node->left), getHeight(node->right));
-    }
-}
-
-int RedBlack::getBalance(Node* node) {
-    return node ? getHeight(node->left) - getHeight(node->right) : 0;
-}
-
-void RedBlack::swap(Node* a, Node* b) {
-    int temp = a->value;
-    a->value = b->value;
-    b->value = temp;
-}
-
-RedBlack::Node* RedBlack::rotateRight(Node* y) {
-    Node* x = y->left;
-    Node* T2 = x->right;
-
-    x->right = y;
-    y->left = T2;
-
-    updateHeight(y);
-    updateHeight(x);
-
-    return x;
-}
-
-RedBlack::Node* RedBlack::rotateLeft(Node* x) {
-    Node* y = x->right;
-    Node* T2 = y->left;
-
-    y->left = x;
-    x->right = T2;
-
-    updateHeight(x);
-    updateHeight(y);
-
-    return y;
-}
-
-void RedBlack::balance(Node* node) {
-    int balance = getBalance(node);
-    if (balance == -2) {
-        if (getBalance(node->left) == 1) rotateLeft(node->left);
-        rotateRight(node);
-    }
-    if (balance == 2) {
-        if (getBalance(node->right) == -1) rotateRight(node->right);
-        rotateLeft(node);
+        if (cur->left) q.push(cur->left);
+        if (cur->right) q.push(cur->right);
     }
 }
 
 void createTreeRb(Logis& log) {
     RedBlack tree;
-    currentItems = 0;
     currentChoose = 0;
+    currentItems = 0;
+    bool isBigNum = false;
+
     do {
         while (true) {
             show_menu(currentItems, countItems, items, "МЕНЮ");
@@ -392,11 +652,14 @@ void createTreeRb(Logis& log) {
 
                 MEASURE("RedBlack", "Insert Auto", tree.insertAuto(N));
                 if (N <= 100) {
-                    cout << GREEN << "АВЛ дерево:" << '\n' << '\n' << RESET;
+					isBigNum = false;
+                    cout << GREEN << "КЧ дерево:" << '\n' << '\n' << RESET;
                     tree.printPretty(tree.getRoot(), cout);
                 }
-                else cout << GREEN << "АВЛ дерево успешно создано с " << N << " элементами" << '\n' << RESET;
-
+                else {
+                    cout << GREEN << "КЧ дерево успешно создано с " << N << " элементами" << '\n' << RESET;
+					isBigNum = true;
+                }
                 pause();
                 clear();
                 break;
@@ -405,7 +668,7 @@ void createTreeRb(Logis& log) {
             {
                 MEASURE("RedBlack", "Insert From Input", tree.insertFromInput());
 
-                tree.printPretty(tree.getRoot(), cout);
+                cout << GREEN << "КЧ дерево успешно создано" << RESET;
                 pause();
                 clear();
                 break;
@@ -414,7 +677,7 @@ void createTreeRb(Logis& log) {
             {
                 MEASURE("RedBlack", "Insert From File", tree.insertFromFile("data/input.txt"));
 
-                tree.printPretty(tree.getRoot(), cout);
+                cout << GREEN << "КЧ дерево успешно создано" << RESET;
                 pause();
                 clear();
                 break;
@@ -431,9 +694,16 @@ void createTreeRb(Logis& log) {
                 clear();
                 break;
             }
-            cout << GREEN << "КЧ дерево:" << '\n' << '\n' << RESET;
-            MEASURE("RedBlack", "Print", tree.printPretty(tree.getRoot(), cout));
-
+            if (!isBigNum)
+            {
+                cout << GREEN << "КЧ дерево:" << '\n' << '\n' << RESET;
+                MEASURE("RedBlack", "Print", tree.printPretty(tree.getRoot(), cout));
+            }
+            else
+            {
+                cout << GREEN << "Высота дерева: " << tree.height(tree.getRoot()) << RESET << '\n';
+                MEASURE("RedBlack", "GetHeight", tree.height(tree.getRoot()));
+            }
             pause();
             clear();
             break;
@@ -448,8 +718,16 @@ void createTreeRb(Logis& log) {
                 clear();
                 break;
             }
-            cout << "RedBlack:" << '\n';
-            tree.printPretty(tree.getRoot(), cout);
+            if (!isBigNum)
+            {
+                cout << GREEN << "КЧ дерево:" << '\n' << '\n' << RESET;
+                MEASURE("RedBlack", "Print", tree.printPretty(tree.getRoot(), cout));
+            }
+            else
+            {
+                cout << GREEN << "Высота дерева: " << tree.height(tree.getRoot()) << RESET << '\n';
+                MEASURE("RedBlack", "GetHeight", tree.height(tree.getRoot()));
+            }
             cout << "Введите число которое необходимо найти: " << '\n';
             cin >> num;
             MEASURE("RedBlack", "Search", tree.search(num));
@@ -478,8 +756,15 @@ void createTreeRb(Logis& log) {
                 clear();
                 break;
             }
-            cout << "RedBlack До удаления:" << '\n';
-            tree.printPretty(tree.getRoot(), cout);
+            if (!isBigNum)
+            {
+                cout << GREEN << "КЧ дерево до удаления:" << '\n' << '\n' << RESET;
+                tree.printPretty(tree.getRoot(), cout);
+            }
+            else
+            {
+                cout << GREEN << "Высота дерева до удаления: " << tree.height(tree.getRoot()) << RESET << '\n';
+            }
             cout << "Введите число которое необходимо удалить: " << '\n';
             cin >> num;
             if (!tree.search(num)) {
@@ -490,8 +775,15 @@ void createTreeRb(Logis& log) {
                 break;
             }
             MEASURE("RedBlack", "Delete", tree.deleteElement(num));
-            cout << "КЧ После удаления:" << '\n';
-            tree.printPretty(tree.getRoot(), cout);
+            if (!isBigNum)
+            {
+                cout << GREEN << "КЧ дерево после удаления:" << '\n' << '\n' << RESET;
+                tree.printPretty(tree.getRoot(), cout);
+            }
+            else
+            {
+                cout << GREEN << "Высота дерева после удаления: " << tree.height(tree.getRoot()) << RESET << '\n';
+            }
             pause();
             clear();
             break;
@@ -514,7 +806,6 @@ void createTreeRb(Logis& log) {
             cout << "\nПострочный обход: " << '\n';
             MEASURE("RedBlack", "LevelOrder", tree.levelOrder(tree.getRoot()));
             cout << '\n' << "-------------------------------------" << '\n';
-            tree.printPretty(tree.getRoot(), cout);
             pause();
             clear();
 

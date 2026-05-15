@@ -26,8 +26,6 @@ private:
 	Node* insertA(Node* node, int value);
 
 	void deleteTree(Node* node);
-	void addLeft(Node* parent, int value);
-	void addRight(Node* parent, int value);
 	Node* findMin(Node* node);
 	int getHeight(Node* node);
 	int getBalance(Node* node);
